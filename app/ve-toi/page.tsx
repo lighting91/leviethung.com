@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Về tôi",
-  description: "Tìm hiểu về Lê Việt Hùng — TikTok Marketing Expert.",
+  description: "Tìm hiểu về Lê Viết Hưng — TikTok Marketing Expert.",
 };
 
 export default function VeToiPage() {
@@ -15,7 +15,7 @@ export default function VeToiPage() {
           LH
         </div>
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-1">Lê Việt Hùng</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-1">Lê Viết Hưng</h1>
           <p className="text-indigo-600 font-medium mb-3">TikTok Marketing Expert & Content Creator</p>
           <p className="text-slate-600 leading-relaxed">
             Tôi giúp các thương hiệu Việt Nam tăng trưởng trên TikTok thông qua chiến lược nội dung sáng tạo và data-driven marketing.

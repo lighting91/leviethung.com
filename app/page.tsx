@@ -15,7 +15,7 @@ export default function HomePage() {
             </p>
             <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 leading-tight mb-4">
               Xin chào, tôi là{" "}
-              <span className="text-indigo-600">Lê Việt Hùng</span>
+              <span className="text-indigo-600">Lê Viết Hưng</span>
             </h1>
             <p className="text-lg text-slate-600 mb-8 max-w-lg mx-auto md:mx-0">
               Tôi chia sẻ kiến thức về TikTok Marketing, chiến lược nội dung và cách xây dựng thương hiệu trên mạng xã hội.

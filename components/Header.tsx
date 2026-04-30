@@ -17,7 +17,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-white border-b border-slate-200">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         <Link href="/" className="font-bold text-lg text-slate-900 tracking-tight">
-          Lê Việt Hùng
+          Lê Viết Hưng
         </Link>
 
         {/* Desktop nav */}

@@ -8,13 +8,13 @@ const inter = Inter({ subsets: ["latin", "vietnamese"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "Lê Việt Hùng — TikTok Marketing & Digital Content",
-    template: "%s | Lê Việt Hùng",
+    default: "Lê Viết Hưng — TikTok Marketing & Digital Content",
+    template: "%s | Lê Viết Hưng",
   },
   description:
     "Blog, tài nguyên và khóa học về TikTok Marketing, Content Creation dành cho thương hiệu Việt.",
   openGraph: {
-    siteName: "Lê Việt Hùng",
+    siteName: "Lê Viết Hưng",
     locale: "vi_VN",
   },
 };

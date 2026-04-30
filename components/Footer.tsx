@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <p className="font-bold text-slate-900">Lê Việt Hùng</p>
+            <p className="font-bold text-slate-900">Lê Viết Hưng</p>
             <p className="text-sm text-slate-500 mt-1">TikTok Marketing & Digital Content Creator</p>
           </div>
 
@@ -52,7 +52,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-6 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-          <p>© {year} Lê Việt Hùng. All rights reserved.</p>
+          <p>© {year} Lê Viết Hưng. All rights reserved.</p>
           <div className="flex gap-4">
             <Link href="/blog" className="hover:text-slate-600 transition-colors">Blog</Link>
             <Link href="/tai-nguyen" className="hover:text-slate-600 transition-colors">Tài nguyên</Link>
