@@ -2,8 +2,8 @@ backend:
   name: github
   repo: lighting91/leviethung.com
   branch: main
-  auth_type: pkce
-  app_id: Ov23liYZD7l33BUZs8Np
+  base_url: https://leviethung.com
+  auth_endpoint: api/oauth
 
 media_folder: public/images
 public_folder: /images
