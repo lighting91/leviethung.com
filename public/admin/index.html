@@ -4,10 +4,75 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
-    <title>Admin — Lê Việt Hùng</title>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <title>Admin — Lê Viết Hưng</title>
   </head>
   <body>
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script>
+      CMS.init({
+        config: {
+          backend: {
+            name: "github",
+            repo: "lighting91/leviethung.com",
+            branch: "main",
+            auth_type: "pkce",
+            app_id: "Ov23liYZD7l33BUZs8Np",
+          },
+          media_folder: "public/images",
+          public_folder: "/images",
+          locale: "vi",
+          collections: [
+            {
+              name: "posts",
+              label: "Bài viết Blog",
+              label_singular: "Bài viết",
+              folder: "content/posts",
+              create: true,
+              slug: "{{slug}}",
+              fields: [
+                { label: "Tiêu đề", name: "title", widget: "string" },
+                { label: "Ngày đăng", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false },
+                { label: "Tóm tắt", name: "excerpt", widget: "text" },
+                { label: "Tags", name: "tags", widget: "list", default: ["TikTok"] },
+                { label: "Ảnh đại diện", name: "thumbnail", widget: "image", required: false },
+                { label: "Nội dung", name: "body", widget: "markdown" },
+              ],
+            },
+            {
+              name: "resources",
+              label: "Tài nguyên",
+              label_singular: "Tài nguyên",
+              folder: "content/resources",
+              create: true,
+              slug: "{{slug}}",
+              fields: [
+                { label: "Tiêu đề", name: "title", widget: "string" },
+                { label: "Mô tả", name: "description", widget: "text" },
+                { label: "Danh mục", name: "category", widget: "select", options: ["PDF · Playbook", "Template", "Checklist", "Video", "Khác"] },
+                { label: "Link file (URL hoặc /files/...)", name: "file_url", widget: "string" },
+                { label: "Ảnh thumbnail", name: "thumbnail", widget: "image", required: false },
+                { label: "Mô tả chi tiết", name: "body", widget: "markdown", required: false },
+              ],
+            },
+            {
+              name: "courses",
+              label: "Khóa học",
+              label_singular: "Khóa học",
+              folder: "content/courses",
+              create: true,
+              slug: "{{slug}}",
+              fields: [
+                { label: "Tên khóa học", name: "title", widget: "string" },
+                { label: "Mô tả ngắn", name: "description", widget: "text" },
+                { label: "Cấp độ", name: "level", widget: "select", options: ["Cơ bản", "Trung cấp", "Nâng cao"], default: "Cơ bản" },
+                { label: "Thời lượng", name: "duration", widget: "string", required: false, hint: "Ví dụ: 4 tuần, 10 giờ học" },
+                { label: "Ảnh cover", name: "thumbnail", widget: "image", required: false },
+                { label: "Nội dung chi tiết", name: "body", widget: "markdown" },
+              ],
+            },
+          ],
+        },
+      });
+    </script>
   </body>
 </html>
