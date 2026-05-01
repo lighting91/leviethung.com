@@ -129,7 +129,7 @@ export default function LessonViewer({ course, currentLesson, currentModule, isE
           {currentLesson.youtube_id ? (
             <div className="aspect-video w-full max-w-5xl mx-auto">
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${currentLesson.youtube_id}?rel=0&modestbranding=1`}
+                src={`https://www.youtube-nocookie.com/embed/${currentLesson.youtube_id.split("?")[0]}?rel=0&modestbranding=1`}
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
