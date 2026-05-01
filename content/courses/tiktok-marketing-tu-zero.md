@@ -17,7 +17,7 @@ modules:
     lessons:
       - slug: gioi-thieu
         title: Giới thiệu khóa học & lộ trình
-        youtube_id: https://youtu.be/9XjFZQpe1gU?si=1dKAgaSSHQuoLF7C
+        youtube_id: https://www.youtube.com/watch?v=Qyvts78wmVA&t=1838s
         duration: 10:00
         free_preview: true
       - slug: thuat-toan-tiktok
