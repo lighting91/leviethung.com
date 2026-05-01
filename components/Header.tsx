@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 const navLinks = [
   { href: "/blog", label: "Blog" },
@@ -12,6 +14,25 @@ const navLinks = [
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setUser(null);
+    setUserMenuOpen(false);
+    window.location.href = "/";
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-slate-200">
@@ -31,12 +52,48 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
-          <a
-            href="mailto:contact@leviethung.com"
-            className="text-sm bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors font-medium"
-          >
-            Liên hệ
-          </a>
+
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-orange-600 transition-colors"
+              >
+                <div className="w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center text-xs font-bold">
+                  {user.email?.charAt(0).toUpperCase()}
+                </div>
+                Tài khoản
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {userMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg py-1 z-50">
+                  <Link
+                    href="/tai-khoan"
+                    className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                    onClick={() => setUserMenuOpen(false)}
+                  >
+                    📚 Khóa học của tôi
+                  </Link>
+                  <hr className="my-1 border-slate-100" />
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50"
+                  >
+                    Đăng xuất
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              href="/dang-nhap"
+              className="text-sm bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors font-medium"
+            >
+              Đăng nhập
+            </Link>
+          )}
         </nav>
 
         {/* Mobile toggle */}
@@ -70,12 +127,31 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
-          <a
-            href="mailto:contact@leviethung.com"
-            className="text-sm text-orange-600 font-medium py-1"
-          >
-            Liên hệ
-          </a>
+          {user ? (
+            <>
+              <Link
+                href="/tai-khoan"
+                className="text-sm text-orange-600 font-medium py-1"
+                onClick={() => setMobileOpen(false)}
+              >
+                Tài khoản
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="text-sm text-red-500 font-medium py-1 text-left"
+              >
+                Đăng xuất
+              </button>
+            </>
+          ) : (
+            <Link
+              href="/dang-nhap"
+              className="text-sm text-orange-600 font-medium py-1"
+              onClick={() => setMobileOpen(false)}
+            >
+              Đăng nhập
+            </Link>
+          )}
         </div>
       )}
     </header>
