@@ -31,9 +31,11 @@ export default function DangKyPage() {
     });
 
     if (error) {
-      setError(error.message === "User already registered"
-        ? "Email này đã được đăng ký. Hãy đăng nhập."
-        : "Có lỗi xảy ra, vui lòng thử lại.");
+      setError(
+        error.message === "User already registered"
+          ? "Email này đã được đăng ký. Hãy đăng nhập."
+          : error.message
+      );
       setLoading(false);
       return;
     }
