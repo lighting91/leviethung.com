@@ -11,6 +11,14 @@ interface Props {
   isEnrolled: boolean;
 }
 
+function extractYouTubeId(input: string): string {
+  // Already a plain ID (no slashes or dots)
+  if (/^[a-zA-Z0-9_-]{11}$/.test(input.split("?")[0])) return input.split("?")[0];
+  // youtu.be/ID or youtube.com/watch?v=ID or youtube.com/embed/ID
+  const m = input.match(/(?:youtu\.be\/|v=|embed\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : input.split("?")[0];
+}
+
 export default function LessonViewer({ course, currentLesson, currentModule, isEnrolled }: Props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -129,7 +137,7 @@ export default function LessonViewer({ course, currentLesson, currentModule, isE
           {currentLesson.youtube_id ? (
             <div className="aspect-video w-full max-w-5xl mx-auto">
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${currentLesson.youtube_id.split("?")[0]}?rel=0&modestbranding=1`}
+                src={`https://www.youtube-nocookie.com/embed/${extractYouTubeId(currentLesson.youtube_id)}?rel=0&modestbranding=1`}
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
