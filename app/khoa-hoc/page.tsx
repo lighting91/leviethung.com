@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllCourses } from "@/lib/content";
+import LearningPath from "@/components/sales/LearningPath";
 
 export const metadata: Metadata = {
   title: "Khóa học",
@@ -12,6 +13,10 @@ const levelColors: Record<string, string> = {
   "Trung cấp": "bg-yellow-50 text-yellow-700",
   "Nâng cao": "bg-red-50 text-red-700",
 };
+
+function formatPrice(n: number) {
+  return n.toLocaleString("vi-VN") + "đ";
+}
 
 export default function KhoaHocPage() {
   const courses = getAllCourses();
@@ -34,34 +39,55 @@ export default function KhoaHocPage() {
           </p>
           <Link
             href="/ve-toi"
-            className="inline-block mt-6 text-sm text-indigo-600 font-medium hover:underline"
+            className="inline-block mt-6 text-sm text-orange-600 font-medium hover:underline"
           >
             Liên hệ để biết thêm →
           </Link>
         </div>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2">
-          {courses.map((course) => (
-            <div key={course.slug} className="bg-white rounded-xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-sm transition-all">
-              <div className="flex items-center gap-2 mb-4">
-                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${levelColors[course.level] ?? "bg-slate-100 text-slate-600"}`}>
-                  {course.level}
-                </span>
-                {course.duration && (
-                  <span className="text-xs text-slate-400">• {course.duration}</span>
-                )}
-              </div>
-              <h2 className="font-semibold text-slate-900 text-lg mb-2">{course.title}</h2>
-              <p className="text-sm text-slate-500 mb-5">{course.description}</p>
+        <>
+          <div className="grid gap-6 sm:grid-cols-2">
+            {courses.map((course) => (
               <Link
+                key={course.slug}
                 href={`/khoa-hoc/${course.slug}`}
-                className="text-sm text-indigo-600 font-medium hover:underline"
+                className="bg-white rounded-xl border border-slate-200 p-6 hover:border-orange-300 hover:shadow-sm transition-all group"
               >
-                Xem chi tiết →
+                <div className="flex items-center gap-2 mb-4">
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${levelColors[course.level] ?? "bg-slate-100 text-slate-600"}`}>
+                    {course.level}
+                  </span>
+                  {course.duration && (
+                    <span className="text-xs text-slate-400">• {course.duration}</span>
+                  )}
+                </div>
+                <h2 className="font-semibold text-slate-900 text-lg mb-2 group-hover:text-orange-600 transition-colors">
+                  {course.title}
+                </h2>
+                <p className="text-sm text-slate-500 mb-4">{course.description}</p>
+                <div className="flex items-center justify-between">
+                  {course.price ? (
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-orange-600">{formatPrice(course.price)}</span>
+                      {course.original_price && (
+                        <span className="text-sm text-slate-400 line-through">{formatPrice(course.original_price)}</span>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-sm text-slate-400">Liên hệ để đăng ký</span>
+                  )}
+                  <span className="text-sm text-orange-600 font-medium">Xem chi tiết →</span>
+                </div>
               </Link>
+            ))}
+          </div>
+
+          {courses.length >= 2 && (
+            <div className="mt-16">
+              <LearningPath courses={courses} />
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </div>
   );

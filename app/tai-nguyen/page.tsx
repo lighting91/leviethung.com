@@ -20,21 +20,21 @@ export default function TaiNguyenPage() {
 
       {/* Always show the PDF playbook */}
       <div className="mb-8">
-        <div className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6 text-white">
+        <div className="bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6 text-white">
           <div className="text-5xl">📘</div>
           <div className="flex-1 text-center sm:text-left">
             <span className="inline-block text-xs bg-white/20 text-white px-2 py-0.5 rounded-full font-medium mb-3">
               PDF · Miễn phí
             </span>
             <h2 className="text-xl font-bold mb-2">TikTok Cosmetic One-Shot Playbook</h2>
-            <p className="text-indigo-100 text-sm">
+            <p className="text-orange-100 text-sm">
               Cẩm nang toàn diện về TikTok Marketing dành cho ngành mỹ phẩm. Bao gồm chiến lược nội dung, cách tăng tương tác và chuyển đổi doanh số.
             </p>
           </div>
           <a
             href="/files/TikTok_Cosmetic_One-Shot_Playbook.pdf"
             download
-            className="flex-shrink-0 bg-white text-indigo-700 font-semibold px-6 py-3 rounded-lg hover:bg-indigo-50 transition-colors whitespace-nowrap"
+            className="flex-shrink-0 bg-white text-orange-700 font-semibold px-6 py-3 rounded-lg hover:bg-orange-50 transition-colors whitespace-nowrap"
           >
             Tải về PDF →
           </a>
@@ -54,7 +54,7 @@ export default function TaiNguyenPage() {
                 <a
                   href={res.fileUrl}
                   download
-                  className="inline-flex items-center gap-2 text-sm text-indigo-600 font-medium hover:underline"
+                  className="inline-flex items-center gap-2 text-sm text-orange-600 font-medium hover:underline"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />

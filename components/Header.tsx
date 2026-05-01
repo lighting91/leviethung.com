@@ -26,14 +26,14 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-slate-600 hover:text-indigo-600 transition-colors font-medium"
+              className="text-sm text-slate-600 hover:text-orange-600 transition-colors font-medium"
             >
               {link.label}
             </Link>
           ))}
           <a
             href="mailto:contact@leviethung.com"
-            className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+            className="text-sm bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors font-medium"
           >
             Liên hệ
           </a>
@@ -72,7 +72,7 @@ export default function Header() {
           ))}
           <a
             href="mailto:contact@leviethung.com"
-            className="text-sm text-indigo-600 font-medium py-1"
+            className="text-sm text-orange-600 font-medium py-1"
           >
             Liên hệ
           </a>

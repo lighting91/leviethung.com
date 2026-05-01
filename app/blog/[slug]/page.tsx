@@ -26,14 +26,14 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
-      <Link href="/blog" className="text-sm text-indigo-600 hover:underline mb-6 inline-block">
+      <Link href="/blog" className="text-sm text-orange-600 hover:underline mb-6 inline-block">
         ← Quay lại Blog
       </Link>
 
       <div className="mb-6">
         <div className="flex flex-wrap gap-2 mb-4">
           {post.tags.map((tag) => (
-            <span key={tag} className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full font-medium">
+            <span key={tag} className="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full font-medium">
               {tag}
             </span>
           ))}
@@ -50,16 +50,16 @@ export default async function BlogPostPage({ params }: Props) {
 
       <hr className="border-slate-200 mb-8" />
 
-      <article className="prose prose-slate max-w-none prose-headings:font-bold prose-a:text-indigo-600 prose-img:rounded-xl">
+      <article className="prose prose-slate max-w-none prose-headings:font-bold prose-a:text-orange-600 prose-img:rounded-xl">
         <MDXRemote source={post.content} />
       </article>
 
       <hr className="border-slate-200 mt-12 mb-8" />
 
-      <div className="bg-indigo-50 rounded-xl p-6 text-center">
+      <div className="bg-orange-50 rounded-xl p-6 text-center">
         <p className="font-semibold text-slate-900 mb-2">Thấy bài viết hữu ích?</p>
         <p className="text-sm text-slate-600 mb-4">Theo dõi tôi để không bỏ lỡ những kiến thức mới nhất.</p>
-        <Link href="/ve-toi" className="text-indigo-600 font-medium text-sm hover:underline">
+        <Link href="/ve-toi" className="text-orange-600 font-medium text-sm hover:underline">
           Tìm hiểu thêm về tôi →
         </Link>
       </div>

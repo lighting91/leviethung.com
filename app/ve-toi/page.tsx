@@ -11,12 +11,12 @@ export default function VeToiPage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8 mb-12">
-        <div className="flex-shrink-0 w-32 h-32 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+        <div className="flex-shrink-0 w-32 h-32 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
           LH
         </div>
         <div>
           <h1 className="text-3xl font-bold text-slate-900 mb-1">Lê Viết Hưng</h1>
-          <p className="text-indigo-600 font-medium mb-3">TikTok Marketing Expert & Content Creator</p>
+          <p className="text-orange-600 font-medium mb-3">TikTok Marketing Expert & Content Creator</p>
           <p className="text-slate-600 leading-relaxed">
             Tôi giúp các thương hiệu Việt Nam tăng trưởng trên TikTok thông qua chiến lược nội dung sáng tạo và data-driven marketing.
           </p>
@@ -59,15 +59,15 @@ export default function VeToiPage() {
       </section>
 
       {/* Contact */}
-      <section className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-8 text-white text-center">
+      <section className="bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-8 text-white text-center">
         <h2 className="text-2xl font-bold mb-3">Cùng làm việc nhé?</h2>
-        <p className="text-indigo-100 mb-6 max-w-md mx-auto">
+        <p className="text-orange-100 mb-6 max-w-md mx-auto">
           Nếu bạn cần tư vấn về TikTok Marketing hoặc muốn hợp tác, hãy liên hệ với tôi.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <a
             href="mailto:contact@leviethung.com"
-            className="bg-white text-indigo-700 font-semibold px-6 py-3 rounded-lg hover:bg-indigo-50 transition-colors"
+            className="bg-white text-orange-700 font-semibold px-6 py-3 rounded-lg hover:bg-orange-50 transition-colors"
           >
             ✉️ Gửi email
           </a>
@@ -82,7 +82,7 @@ export default function VeToiPage() {
         </div>
 
         <div className="mt-8 pt-6 border-t border-white/20">
-          <p className="text-indigo-200 text-sm mb-4">Hoặc xem thêm tài nguyên miễn phí:</p>
+          <p className="text-orange-200 text-sm mb-4">Hoặc xem thêm tài nguyên miễn phí:</p>
           <Link
             href="/tai-nguyen"
             className="text-white font-medium text-sm hover:underline"

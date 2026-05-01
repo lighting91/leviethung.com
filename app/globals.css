@@ -2,8 +2,9 @@
 @plugin "@tailwindcss/typography";
 
 @theme inline {
-  --color-primary: #4F46E5;
-  --color-primary-dark: #3730A3;
+  --color-primary: #FF6B35;
+  --color-primary-dark: #E55A2B;
+  --color-primary-light: #FFF1EC;
   --font-sans: "Inter", system-ui, sans-serif;
 }
 
@@ -30,6 +31,6 @@ body {
 }
 
 .prose a {
-  color: #4F46E5;
+  color: #FF6B35;
   text-decoration: underline;
 }

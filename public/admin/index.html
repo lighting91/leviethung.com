@@ -45,7 +45,7 @@ collections:
       - { label: "Tiêu đề", name: title, widget: string }
       - { label: "Mô tả", name: description, widget: text }
       - { label: "Danh mục", name: category, widget: select, options: ["PDF · Playbook", "Template", "Checklist", "Video", "Khác"] }
-      - { label: "Link file", name: file_url, widget: string }
+      - { label: "Link file (URL hoặc /files/...)", name: file_url, widget: string }
       - { label: "Ảnh thumbnail", name: thumbnail, widget: image, required: false }
       - { label: "Mô tả chi tiết", name: body, widget: markdown, required: false }
 
@@ -59,9 +59,91 @@ collections:
       - { label: "Tên khóa học", name: title, widget: string }
       - { label: "Mô tả ngắn", name: description, widget: text }
       - { label: "Cấp độ", name: level, widget: select, options: ["Cơ bản", "Trung cấp", "Nâng cao"], default: "Cơ bản" }
-      - { label: "Thời lượng", name: duration, widget: string, required: false }
+      - { label: "Thời lượng", name: duration, widget: string, required: false, hint: "Ví dụ: 4 tuần, 10 giờ học" }
       - { label: "Ảnh cover", name: thumbnail, widget: image, required: false }
-      - { label: "Nội dung chi tiết", name: body, widget: markdown }
+      - { label: "Giá bán (VND)", name: price, widget: number, required: false, hint: "Ví dụ: 1990000" }
+      - { label: "Giá gốc (VND, để gạch ngang)", name: original_price, widget: number, required: false }
+      - { label: "Headline trang bán hàng", name: hero_headline, widget: string, required: false }
+      - { label: "Subheadline", name: hero_subheadline, widget: string, required: false }
+      - label: "Nỗi đau của học viên"
+        name: pain_points
+        widget: list
+        required: false
+        hint: "Mỗi dòng là một vấn đề học viên đang gặp"
+      - label: "Modules & Bài học"
+        name: modules
+        widget: list
+        required: false
+        fields:
+          - { label: "Tên module", name: title, widget: string }
+          - label: "Bài học"
+            name: lessons
+            widget: list
+            fields:
+              - { label: "Slug (không dấu, không cách)", name: slug, widget: string }
+              - { label: "Tên bài học", name: title, widget: string }
+              - { label: "YouTube Video ID", name: youtube_id, widget: string, required: false, hint: "Phần ID trong URL: youtube.com/watch?v=XXXX" }
+              - { label: "Thời lượng", name: duration, widget: string, required: false, hint: "Ví dụ: 15:30" }
+              - { label: "Xem miễn phí?", name: free_preview, widget: boolean, default: false }
+      - label: "Bonus"
+        name: bonuses
+        widget: list
+        required: false
+        fields:
+          - { label: "Tên bonus", name: title, widget: string }
+          - { label: "Mô tả", name: description, widget: string, required: false }
+          - { label: "Giá trị (VND)", name: value, widget: number, required: false }
+      - { label: "Tag testimonials", name: testimonials_tag, widget: string, required: false, hint: "Tag để lọc testimonials phù hợp" }
+      - { label: "Text nút CTA", name: cta_text, widget: string, required: false, default: "ĐĂNG KÝ NGAY" }
+      - { label: "Hạn ưu đãi", name: deadline, widget: datetime, required: false, format: "YYYY-MM-DD" }
+      - { label: "Số slot còn lại", name: slots_remaining, widget: number, required: false }
+      - label: "FAQ"
+        name: faq
+        widget: list
+        required: false
+        fields:
+          - { label: "Câu hỏi", name: question, widget: string }
+          - { label: "Trả lời", name: answer, widget: text }
+      - { label: "Nội dung chi tiết", name: body, widget: markdown, required: false }
+
+  - name: testimonials
+    label: "Học viên đánh giá"
+    label_singular: "Đánh giá"
+    folder: content/testimonials
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Tên học viên", name: name, widget: string }
+      - { label: "Ảnh học viên", name: avatar, widget: image, required: false }
+      - { label: "Chức danh / Nghề nghiệp", name: role, widget: string, required: false }
+      - { label: "Nội dung đánh giá", name: body, widget: text }
+      - { label: "Số sao (1-5)", name: rating, widget: number, default: 5, min: 1, max: 5 }
+      - { label: "Kết quả đạt được", name: result, widget: string, required: false, hint: "Ví dụ: Từ 200 view → 500K view" }
+      - { label: "Screenshot kết quả", name: screenshot, widget: image, required: false }
+      - { label: "Tags (để lọc theo khóa học)", name: tags, widget: list, hint: "Điền tag giống testimonials_tag của khóa học" }
+
+  - name: settings
+    label: "Cài đặt"
+    files:
+      - label: "Thông tin giảng viên"
+        name: instructor
+        file: content/settings/instructor.md
+        fields:
+          - { label: "Họ tên", name: name, widget: string }
+          - { label: "Chức danh", name: title, widget: string }
+          - { label: "Giới thiệu bản thân", name: bio, widget: text }
+          - { label: "Ảnh đại diện", name: avatar, widget: image, required: false }
+          - label: "Thành tựu"
+            name: achievements
+            widget: list
+            hint: "Mỗi dòng là một thành tựu"
+          - label: "Mạng xã hội"
+            name: social
+            widget: object
+            fields:
+              - { label: "TikTok URL", name: tiktok, widget: string, required: false }
+              - { label: "Facebook URL", name: facebook, widget: string, required: false }
+              - { label: "YouTube URL", name: youtube, widget: string, required: false }
     </script>
     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
   </body>

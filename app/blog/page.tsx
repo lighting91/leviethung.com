@@ -28,16 +28,16 @@ export default function BlogPage() {
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="bg-white rounded-xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-sm transition-all group"
+              className="bg-white rounded-xl border border-slate-200 p-6 hover:border-orange-300 hover:shadow-sm transition-all group"
             >
               <div className="flex flex-wrap gap-2 mb-3">
                 {post.tags.slice(0, 3).map((tag) => (
-                  <span key={tag} className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full font-medium">
+                  <span key={tag} className="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full font-medium">
                     {tag}
                   </span>
                 ))}
               </div>
-              <h2 className="font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors mb-2 text-lg line-clamp-2">
+              <h2 className="font-semibold text-slate-900 group-hover:text-orange-600 transition-colors mb-2 text-lg line-clamp-2">
                 {post.title}
               </h2>
               <p className="text-sm text-slate-500 line-clamp-3 mb-4">{post.excerpt}</p>
