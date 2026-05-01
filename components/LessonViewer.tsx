@@ -294,13 +294,11 @@ export default function LessonViewer({
           ) : videoId ? (
             <div className="aspect-video w-full max-w-5xl mx-auto">
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&disablekb=0&iv_load_policy=3&origin=${encodeURIComponent(typeof window !== "undefined" ? window.location.origin : "")}`}
+                src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&iv_load_policy=3`}
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                sandbox="allow-scripts allow-same-origin allow-presentation allow-fullscreen"
                 allowFullScreen
                 title={currentLesson.title}
-                referrerPolicy="no-referrer"
               />
             </div>
           ) : (

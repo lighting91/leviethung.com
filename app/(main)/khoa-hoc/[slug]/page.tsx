@@ -51,6 +51,9 @@ export default async function CourseDetailPage({ params }: Props) {
 
   const totalLessons = course.modules?.reduce((sum, m) => sum + (m.lessons?.length ?? 0), 0) ?? 0;
   const firstLesson = course.modules?.[0]?.lessons?.[0]?.slug ?? "gioi-thieu";
+  const firstFreeLesson = course.modules
+    ?.flatMap((m) => m.lessons ?? [])
+    .find((l) => l.free_preview);
 
   return (
     <div className="min-h-screen bg-white">
@@ -95,12 +98,22 @@ export default async function CourseDetailPage({ params }: Props) {
                   Tiếp tục học →
                 </Link>
               ) : (
-                <Link
-                  href={`/khoa-hoc/${slug}/thanh-toan`}
-                  className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors text-lg"
-                >
-                  {course.cta_text ?? "Đăng ký ngay"} →
-                </Link>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Link
+                    href={`/khoa-hoc/${slug}/thanh-toan`}
+                    className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors text-lg"
+                  >
+                    {course.cta_text ?? "Đăng ký ngay"} →
+                  </Link>
+                  {firstFreeLesson && (
+                    <Link
+                      href={`/khoa-hoc/${slug}/hoc/${firstFreeLesson.slug}`}
+                      className="text-orange-300 hover:text-white border border-orange-500/40 hover:border-orange-400 font-medium px-6 py-3.5 rounded-xl transition-colors text-sm"
+                    >
+                      ▶ Học thử miễn phí
+                    </Link>
+                  )}
+                </div>
               )}
             </div>
           </div>
@@ -259,12 +272,22 @@ export default async function CourseDetailPage({ params }: Props) {
                     Tiếp tục học →
                   </Link>
                 ) : (
-                  <Link
-                    href={`/khoa-hoc/${slug}/thanh-toan`}
-                    className="block w-full text-center bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3.5 rounded-xl transition-colors"
-                  >
-                    {course.cta_text ?? "Đăng ký ngay"}
-                  </Link>
+                  <div className="space-y-2">
+                    <Link
+                      href={`/khoa-hoc/${slug}/thanh-toan`}
+                      className="block w-full text-center bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3.5 rounded-xl transition-colors"
+                    >
+                      {course.cta_text ?? "Đăng ký ngay"}
+                    </Link>
+                    {firstFreeLesson && (
+                      <Link
+                        href={`/khoa-hoc/${slug}/hoc/${firstFreeLesson.slug}`}
+                        className="block w-full text-center text-orange-600 hover:text-orange-700 border border-orange-200 hover:border-orange-400 font-medium py-2.5 rounded-xl transition-colors text-sm"
+                      >
+                        ▶ Học thử miễn phí
+                      </Link>
+                    )}
+                  </div>
                 )}
 
                 <div className="mt-5 space-y-2.5 text-sm text-slate-600">
