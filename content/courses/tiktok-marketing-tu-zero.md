@@ -17,7 +17,7 @@ modules:
     lessons:
       - slug: gioi-thieu
         title: Giới thiệu khóa học & lộ trình
-        youtube_id: <iframe width="975" height="548" src="https://www.youtube.com/embed/S-ojFJFnv1c?list=RDS-ojFJFnv1c" title="CỎ DẠI VÀ HOA DÀNH DÀNH - Cỏ Dại Khô Dưới Chân | BXH TOP HITS BALLAD CA SĨ GIẤU MẶT Hay Nhất 2026" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        youtube_id: S-ojFJFnv1c&list=RDS-ojFJFnv1c
         duration: 10:00
         free_preview: true
       - slug: thuat-toan-tiktok
