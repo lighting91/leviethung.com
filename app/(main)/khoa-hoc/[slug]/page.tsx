@@ -157,28 +157,45 @@ export default async function CourseDetailPage({ params }: Props) {
                         <span className="text-xs text-slate-500">{mod.lessons?.length ?? 0} bài</span>
                       </div>
                       <ul className="divide-y divide-slate-100">
-                        {mod.lessons?.map((lesson) => (
-                          <li key={lesson.slug} className="flex items-center gap-3 px-5 py-3">
-                            {lesson.free_preview ? (
-                              <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z" />
-                              </svg>
-                            ) : (
-                              <svg className="w-4 h-4 text-slate-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                              </svg>
-                            )}
-                            <span className="text-sm text-slate-700 flex-1">{lesson.title}</span>
-                            <div className="flex items-center gap-2">
-                              {lesson.free_preview && (
-                                <span className="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Xem thử</span>
+                        {mod.lessons?.map((lesson) => {
+                          const inner = (
+                            <>
+                              {lesson.free_preview ? (
+                                <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z" />
+                                </svg>
+                              ) : (
+                                <svg className="w-4 h-4 text-slate-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
                               )}
-                              {lesson.duration && (
-                                <span className="text-xs text-slate-400">{lesson.duration}</span>
-                              )}
-                            </div>
-                          </li>
-                        ))}
+                              <span className="text-sm flex-1 leading-snug">{lesson.title}</span>
+                              <div className="flex items-center gap-2 flex-shrink-0">
+                                {lesson.free_preview && (
+                                  <span className="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full font-medium">Xem thử</span>
+                                )}
+                                {lesson.duration && (
+                                  <span className="text-xs text-slate-400">{lesson.duration}</span>
+                                )}
+                              </div>
+                            </>
+                          );
+
+                          return lesson.free_preview ? (
+                            <li key={lesson.slug}>
+                              <Link
+                                href={`/khoa-hoc/${slug}/hoc/${lesson.slug}`}
+                                className="flex items-center gap-3 px-5 py-3 hover:bg-green-50 transition-colors group text-slate-700 hover:text-green-700"
+                              >
+                                {inner}
+                              </Link>
+                            </li>
+                          ) : (
+                            <li key={lesson.slug} className="flex items-center gap-3 px-5 py-3 text-slate-500">
+                              {inner}
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   ))}
