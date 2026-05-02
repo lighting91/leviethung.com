@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
 async function logToGoogleSheet(data: Record<string, unknown>) {
   const url = process.env.GOOGLE_SHEET_WEBHOOK_URL;
   if (!url) return;
@@ -10,14 +12,40 @@ async function logToGoogleSheet(data: Record<string, unknown>) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-  } catch {
-    // non-critical
+  } catch { /* non-critical */ }
+}
+
+// Forward tới WS305 nếu payment không phải của leviethung.com courses
+async function forwardToWS305(body: Record<string, unknown>) {
+  const ws305Url = process.env.WS305_WEBHOOK_URL;
+  if (!ws305Url) return;
+  try {
+    await fetch(ws305Url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Forward secret key của WS305
+        "X-Secret-Key": process.env.WS305_SECRET_KEY ?? "",
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (e) {
+    console.error("WS305 forward error:", e);
   }
 }
 
+// Kiểm tra transfer content có thuộc về leviethung.com courses không
+function isLVHPayment(content: string): boolean {
+  return /^LVH[A-Z0-9]+$/i.test(content.trim());
+}
+
+// ─── Main handler ─────────────────────────────────────────────────────────────
+
 export async function POST(request: NextRequest) {
-  // Verify SePay secret
-  const secret = request.headers.get("x-sepay-secret") ?? request.headers.get("authorization");
+  // Verify SePay secret (dùng chung secret key)
+  const secret = request.headers.get("x-sepay-secret")
+    ?? request.headers.get("x-secret-key")
+    ?? request.headers.get("authorization");
   const expectedSecret = process.env.SEPAY_SECRET;
   if (expectedSecret && secret !== expectedSecret && secret !== `Bearer ${expectedSecret}`) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -30,23 +58,36 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  // SePay webhook body fields
-  const transferContent = (body.content ?? body.addInfo ?? "") as string;
+  // Lấy nội dung chuyển khoản — SePay gửi nhiều field khác nhau tuỳ version
+  const transferContent = (
+    body.content ??
+    body.addInfo ??
+    body["transfer_content"] ??
+    body.description ??
+    ""
+  ) as string;
+
   const transferAmount = (body.transferAmount ?? body.amount ?? 0) as number;
   const transferType = (body.transferType ?? "in") as string;
 
-  // Only process incoming transfers
+  // Chỉ xử lý incoming transfer
   if (transferType !== "in") {
     return Response.json({ ok: true, message: "Skipped outgoing" });
   }
 
-  if (!transferContent) {
-    return Response.json({ error: "No transfer content" }, { status: 400 });
+  // ── Phân luồng ──────────────────────────────────────────────────────────────
+
+  if (!isLVHPayment(transferContent)) {
+    // Không phải payment của leviethung.com → forward sang WS305
+    await forwardToWS305(body);
+    return Response.json({ ok: true, message: "Forwarded to WS305" });
   }
+
+  // ── Xử lý payment của leviethung.com courses ────────────────────────────────
 
   const supabase = await createClient();
 
-  // Find matching pending order
+  // Tìm order khớp với transfer content
   const { data: order } = await supabase
     .from("orders")
     .select("*")
@@ -58,19 +99,19 @@ export async function POST(request: NextRequest) {
     return Response.json({ ok: true, message: "Order not found or already processed" });
   }
 
-  // Verify amount (allow small difference for bank fees)
+  // Kiểm tra số tiền (cho phép sai lệch 1% do phí ngân hàng)
   if (transferAmount < order.amount * 0.99) {
     console.error(`Amount mismatch: expected ${order.amount}, got ${transferAmount}`);
     return Response.json({ error: "Amount mismatch" }, { status: 400 });
   }
 
-  // Update order to paid
+  // Cập nhật order → paid
   await supabase
     .from("orders")
     .update({ status: "paid", paid_at: new Date().toISOString() })
     .eq("id", order.id);
 
-  // Create enrollment
+  // Tạo enrollment
   await supabase.from("enrollments").upsert(
     {
       user_id: order.user_id,
@@ -81,7 +122,7 @@ export async function POST(request: NextRequest) {
     { onConflict: "user_id,course_slug" }
   );
 
-  // Log to Google Sheet
+  // Log sang Google Sheet
   await logToGoogleSheet({
     timestamp: new Date().toISOString(),
     name: order.user_name ?? "",
@@ -90,6 +131,7 @@ export async function POST(request: NextRequest) {
     amount: order.amount,
     transfer_content: order.transfer_content,
     order_id: order.id,
+    source: "leviethung.com",
   });
 
   return Response.json({ ok: true, message: "Enrollment created" });
