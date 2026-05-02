@@ -31,21 +31,23 @@
 
 ## 3. Credentials & IDs quan trọng
 
-```
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://xkhygsgwvsauaqwiuysk.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (xem Vercel env)
+> ⚠️ KHÔNG lưu token/secret vào file này. Xem tại Vercel Dashboard → Settings → Environment Variables
 
-# Vercel
+```
+# Supabase (NEXT_PUBLIC_ = public by design, an toàn)
+NEXT_PUBLIC_SUPABASE_URL=https://xkhygsgwvsauaqwiuysk.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=             ← xem Vercel env
+
+# Vercel (chỉ dùng trong GitHub Actions secret — KHÔNG để ở đây)
 VERCEL_ORG_ID=team_glPbBvGRIgxAERuzKDNIM2Bs
 VERCEL_PROJECT_ID=prj_qUintqGwhedTKEWlXSrlc2MTobLM
-VERCEL_TOKEN=vca_62J1iiOjBwDmSeVAc1wmyZt3KEITD8boSZkvFqhdk1eWHvQh732FbWR2
+VERCEL_TOKEN=                              ← GitHub Secret (Settings → Secrets)
 
 # GitHub OAuth (Sveltia CMS)
-GITHUB_CLIENT_ID=Ov23liYZD7l33BUZs8Np   ← public (trong config.yml)
-GITHUB_CLIENT_SECRET=                    ← chỉ trong Vercel env
+GITHUB_CLIENT_ID=Ov23liYZD7l33BUZs8Np     ← public (trong config.yml), an toàn
+GITHUB_CLIENT_SECRET=                      ← chỉ trong Vercel env
 
-# Thanh toán (CHƯA setup — cần thêm vào Vercel)
+# Thanh toán (CHƯA setup — cần thêm vào Vercel Dashboard)
 BANK_ACCOUNT_NO=
 BANK_ACCOUNT_NAME=              # Không dấu, viết hoa (VD: LE VIET HUNG)
 BANK_ACQ_ID=                    # MB=970422, VCB=970436, TCB=970407
