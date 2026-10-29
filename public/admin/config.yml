@@ -119,7 +119,8 @@ collections:
       - { label: "Số sao (1-5)", name: rating, widget: number, default: 5, min: 1, max: 5 }
       - { label: "Kết quả đạt được", name: result, widget: string, required: false }
       - { label: "Screenshot kết quả", name: screenshot, widget: image, required: false }
-      - { label: "Tags", name: tags, widget: list }
+      - { label: "Nền tảng (hiện dạng #tag)", name: platform, widget: string, required: false, hint: "Ví dụ: TikTokShop, Shopee" }
+      - { label: "Tags", name: tags, widget: list, hint: "Gắn tag 'home' để hiện ở trang chủ; gắn tag của khóa học để hiện ở trang khóa học" }
 
   - name: settings
     label: "Cài đặt"
@@ -142,3 +143,84 @@ collections:
               - { label: "TikTok URL", name: tiktok, widget: string, required: false }
               - { label: "Facebook URL", name: facebook, widget: string, required: false }
               - { label: "YouTube URL", name: youtube, widget: string, required: false }
+
+      - label: "Trang chủ"
+        name: home
+        file: content/settings/home.md
+        fields:
+          - label: "Hero (màn hình đầu)"
+            name: hero
+            widget: object
+            fields:
+              - { label: "Dòng nhỏ phía trên", name: eyebrow, widget: string }
+              - { label: "Tiêu đề", name: title, widget: string }
+              - { label: "Tiêu đề nhấn (màu cyan)", name: title_accent, widget: string }
+              - { label: "Mô tả", name: subtitle, widget: text }
+              - { label: "Ảnh chân dung", name: image, widget: image, required: false }
+              - label: "Thẻ số liệu nổi trên ảnh"
+                name: float_cards
+                widget: list
+                fields:
+                  - { label: "Con số", name: value, widget: string }
+                  - { label: "Mô tả", name: label, widget: string }
+          - label: "Con số ấn tượng"
+            name: stats
+            widget: object
+            fields:
+              - { label: "Đoạn giới thiệu", name: intro, widget: text }
+              - label: "Số nổi bật (ô đen)"
+                name: highlight
+                widget: object
+                fields:
+                  - { label: "Tiền tố (VD: >)", name: prefix, widget: string, required: false }
+                  - { label: "Con số", name: value, widget: number }
+                  - { label: "Hậu tố (VD: +, %, tỷ)", name: suffix, widget: string, required: false }
+                  - { label: "Mô tả", name: label, widget: string }
+              - label: "Danh sách số liệu"
+                name: items
+                widget: list
+                fields:
+                  - { label: "Tiền tố (VD: >)", name: prefix, widget: string, required: false }
+                  - { label: "Con số", name: value, widget: number }
+                  - { label: "Hậu tố (VD: +, %, tỷ)", name: suffix, widget: string, required: false }
+                  - { label: "Mô tả", name: label, widget: string }
+          - label: "Giới thiệu ngắn"
+            name: about
+            widget: object
+            fields:
+              - { label: "Vai trò", name: role, widget: string }
+              - { label: "Ảnh", name: image, widget: image, required: false }
+              - { label: "Câu giới thiệu", name: intro, widget: text }
+              - { label: "Điểm nổi bật", name: checks, widget: list }
+              - { label: "Câu nói", name: quote, widget: text, required: false }
+          - label: "Case study"
+            name: cases
+            widget: list
+            fields:
+              - { label: "Tên", name: name, widget: string }
+              - { label: "Nền tảng", name: platform, widget: select, options: ["Shopee", "TikTok Shop", "TikTok"] }
+              - { label: "Ảnh chụp màn hình", name: image, widget: image, required: false }
+              - { label: "Handle (VD: @kat.i618)", name: handle, widget: string, required: false }
+              - { label: "Link handle", name: handle_url, widget: string, required: false }
+              - { label: "Tóm tắt", name: summary, widget: text }
+              - label: "Chỉ số"
+                name: metrics
+                widget: list
+                fields:
+                  - { label: "Con số", name: value, widget: string }
+                  - { label: "Mô tả", name: label, widget: string }
+              - label: "KOL/KOC tham gia"
+                name: kols
+                widget: list
+                required: false
+                fields:
+                  - { label: "Tên", name: name, widget: string }
+                  - { label: "Handle", name: handle, widget: string, required: false }
+                  - { label: "Ảnh", name: avatar, widget: image, required: false }
+          - label: "Đối tác (logo)"
+            name: partners
+            widget: list
+            fields:
+              - { label: "Tên thương hiệu", name: name, widget: string }
+              - { label: "Link gian hàng", name: url, widget: string, required: false }
+              - { label: "Logo", name: logo, widget: image, required: false }

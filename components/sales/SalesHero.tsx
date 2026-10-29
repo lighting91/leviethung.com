@@ -9,10 +9,10 @@ export default function SalesHero({ course }: Props) {
   const ctaHref = `#dang-ky`;
 
   return (
-    <section className="bg-gradient-to-b from-slate-900 to-slate-800 text-white py-16 px-4 sm:px-6">
+    <section className="bg-gradient-to-b from-ink to-[#16181d] text-white py-16 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/30 text-orange-400 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
-          <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
+        <div className="inline-flex items-center gap-2 bg-cyan/20 border border-cyan/30 text-cyan text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+          <span className="w-2 h-2 rounded-full bg-cyan animate-pulse" />
           Khóa học {course.level}
         </div>
 
@@ -21,12 +21,12 @@ export default function SalesHero({ course }: Props) {
         </h1>
 
         {course.hero_subheadline && (
-          <p className="text-lg sm:text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-[#c8ced6] mb-8 max-w-2xl mx-auto">
             {course.hero_subheadline}
           </p>
         )}
 
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-8 text-sm text-slate-400">
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-8 text-sm text-muted">
           {course.duration && (
             <span className="flex items-center gap-1.5">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,7 +53,7 @@ export default function SalesHero({ course }: Props) {
 
         <Link
           href={ctaHref}
-          className="inline-block bg-orange-600 hover:bg-orange-700 text-white font-bold text-lg px-10 py-4 rounded-xl transition-colors shadow-lg shadow-orange-900/30"
+          className="inline-block bg-ink hover:bg-black text-white font-bold text-lg px-10 py-4 rounded-xl transition-colors shadow-lg shadow-orange-900/30"
         >
           {course.cta_text ?? "ĐĂNG KÝ NGAY"}
         </Link>

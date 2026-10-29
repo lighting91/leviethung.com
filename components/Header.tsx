@@ -1,19 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
+import Icon from "@/components/ui/Icon";
+import Logo from "@/components/ui/Logo";
+import { site } from "@/lib/site";
 
 const navLinks = [
-  { href: "/blog", label: "Blog" },
-  { href: "/tai-nguyen", label: "Tài nguyên" },
-  { href: "/khoa-hoc", label: "Khóa học" },
   { href: "/ve-toi", label: "Về tôi" },
+  { href: "/khoa-hoc", label: "Khóa học" },
+  { href: "/tai-nguyen", label: "Tài nguyên" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export default function Header() {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [userName, setUserName] = useState<string>("");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -43,15 +49,33 @@ export default function Header() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Close dropdown when clicking outside
+  // Nav shadow once the page scrolls
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Close dropdown when clicking outside; close menus on Escape
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setUserMenuOpen(false);
       }
     }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setUserMenuOpen(false);
+        setMobileOpen(false);
+      }
+    }
     document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
   }, []);
 
   async function handleSignOut() {
@@ -63,24 +87,37 @@ export default function Header() {
     window.location.href = "/";
   }
 
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
   const avatarLetter = userName ? userName[0].toUpperCase() : "?";
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-slate-200">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-        <Link href="/" className="font-bold text-lg text-slate-900 tracking-tight">
-          Lê Viết Hưng
+    <header
+      className={`fixed inset-x-0 top-0 z-[100] h-[var(--nav-h)] border-b bg-white/[.92] backdrop-blur-[14px] backdrop-saturate-[1.4] transition-[border-color,box-shadow] duration-200 ${
+        scrolled || mobileOpen ? "border-line shadow-[0_6px_24px_-18px_rgba(14,15,18,.35)]" : "border-transparent"
+      }`}
+    >
+      <div className="container-x flex h-full items-center justify-between gap-6">
+        <Link href="/" aria-label="Lê Viết Hưng — trang chủ" onClick={() => setMobileOpen(false)}>
+          <Logo />
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden items-center gap-[30px] lg:flex" aria-label="Điều hướng chính">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-slate-600 hover:text-orange-600 transition-colors font-medium"
+              aria-current={isActive(link.href) ? "page" : undefined}
+              className={`group relative text-[0.95rem] font-medium transition-colors hover:text-ink ${
+                isActive(link.href) ? "text-ink" : "text-body"
+              }`}
             >
               {link.label}
+              <span
+                className={`absolute inset-x-0 -bottom-1.5 h-0.5 rounded-sm bg-cyan transition-transform duration-200 group-hover:scale-x-100 ${
+                  isActive(link.href) ? "scale-x-100" : "scale-x-0"
+                }`}
+              />
             </Link>
           ))}
 
@@ -88,57 +125,48 @@ export default function Header() {
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-orange-600 transition-colors max-w-[200px]"
+                aria-expanded={userMenuOpen}
+                aria-haspopup="menu"
+                className="flex max-w-[200px] items-center gap-2 text-[0.95rem] font-medium text-body transition-colors hover:text-ink"
               >
-                <div className="w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+                <span className="grid h-8 w-8 flex-none place-items-center rounded-full bg-ink text-xs font-bold text-cyan">
                   {avatarLetter}
-                </div>
+                </span>
                 <span className="truncate">{userName}</span>
-                <svg className="w-4 h-4 flex-shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+                <Icon name="chevron-down" className="h-4 w-4 flex-none text-muted" strokeWidth={2} />
               </button>
 
               {userMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-slate-200 rounded-xl shadow-lg py-1.5 z-50">
-                  {/* User info header */}
-                  <div className="px-4 py-2.5 border-b border-slate-100">
-                    <p className="text-sm font-semibold text-slate-900 truncate">{userName}</p>
-                    <p className="text-xs text-slate-400 truncate">{user.email}</p>
+                <div className="absolute right-0 top-full z-50 mt-3 w-56 rounded-card-sm border border-line bg-white py-1.5 shadow-card" role="menu">
+                  <div className="border-b border-line px-4 py-2.5">
+                    <p className="truncate text-sm font-semibold text-ink">{userName}</p>
+                    <p className="truncate text-xs text-muted">{user.email}</p>
                   </div>
-
                   <Link
                     href="/tai-khoan"
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                    role="menuitem"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-body transition-colors hover:bg-soft hover:text-ink"
                     onClick={() => setUserMenuOpen(false)}
                   >
-                    <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
+                    <Icon name="book" className="h-4 w-4 text-cyan-ink" />
                     Khóa học của tôi
                   </Link>
-
                   <Link
                     href="/tai-khoan/cap-nhat"
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                    role="menuitem"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-body transition-colors hover:bg-soft hover:text-ink"
                     onClick={() => setUserMenuOpen(false)}
                   >
-                    <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
+                    <Icon name="settings" className="h-4 w-4 text-cyan-ink" />
                     Cài đặt tài khoản
                   </Link>
-
-                  <hr className="my-1 border-slate-100" />
-
+                  <hr className="my-1 border-line" />
                   <button
                     onClick={handleSignOut}
-                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    role="menuitem"
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#b42318] transition-colors hover:bg-[#fdecec]"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
+                    <Icon name="logout" className="h-4 w-4" />
                     Đăng xuất
                   </button>
                 </div>
@@ -147,90 +175,82 @@ export default function Header() {
           ) : (
             <Link
               href="/dang-nhap"
-              className="text-sm bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors font-medium"
+              className={`text-[0.95rem] font-medium transition-colors hover:text-ink ${isActive("/dang-nhap") ? "text-ink" : "text-body"}`}
             >
               Đăng nhập
             </Link>
           )}
+
+          <a href={site.zalo.url} target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm">
+            <Icon name="chat" className="h-[18px] w-[18px]" strokeWidth={2} />
+            Chat Zalo
+          </a>
         </nav>
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+          className="grid h-11 w-11 place-items-center text-ink lg:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
+          aria-label={mobileOpen ? "Đóng menu" : "Mở menu"}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-nav"
         >
-          {mobileOpen ? (
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
+          <Icon name={mobileOpen ? "close" : "menu"} className="h-6 w-6" strokeWidth={2} />
         </button>
       </div>
 
       {/* Mobile nav */}
-      {mobileOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 py-3 flex flex-col gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm text-slate-700 font-medium py-2"
-              onClick={() => setMobileOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
+      <nav
+        id="mobile-nav"
+        aria-label="Điều hướng di động"
+        className={`fixed inset-x-0 top-[var(--nav-h)] max-h-[calc(100dvh-var(--nav-h))] overflow-y-auto border-b border-line bg-white px-6 pb-6 pt-2 shadow-[0_24px_40px_-24px_rgba(14,15,18,.35)] transition-[opacity,transform,visibility] duration-200 lg:hidden ${
+          mobileOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0"
+        }`}
+      >
+        {navLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            aria-current={isActive(link.href) ? "page" : undefined}
+            className={`block border-b border-line py-3.5 text-base font-medium ${isActive(link.href) ? "text-cyan-deep" : "text-ink"}`}
+            onClick={() => setMobileOpen(false)}
+          >
+            {link.label}
+          </Link>
+        ))}
 
-          <hr className="my-1 border-slate-100" />
-
-          {user ? (
-            <>
-              <div className="flex items-center gap-2.5 py-2">
-                <div className="w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
-                  {avatarLetter}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-slate-900 truncate">{userName}</p>
-                  <p className="text-xs text-slate-400 truncate">{user.email}</p>
-                </div>
-              </div>
-              <Link
-                href="/tai-khoan"
-                className="text-sm text-slate-700 font-medium py-2"
-                onClick={() => setMobileOpen(false)}
-              >
-                📚 Khóa học của tôi
-              </Link>
-              <Link
-                href="/tai-khoan/cap-nhat"
-                className="text-sm text-slate-700 font-medium py-2"
-                onClick={() => setMobileOpen(false)}
-              >
-                ⚙️ Cài đặt tài khoản
-              </Link>
-              <button
-                onClick={handleSignOut}
-                className="text-sm text-red-500 font-medium py-2 text-left"
-              >
-                Đăng xuất
-              </button>
-            </>
-          ) : (
-            <Link
-              href="/dang-nhap"
-              className="text-sm text-orange-600 font-medium py-2"
-              onClick={() => setMobileOpen(false)}
-            >
-              Đăng nhập
+        {user ? (
+          <>
+            <div className="flex items-center gap-2.5 border-b border-line py-3.5">
+              <span className="grid h-9 w-9 flex-none place-items-center rounded-full bg-ink text-xs font-bold text-cyan">
+                {avatarLetter}
+              </span>
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-semibold text-ink">{userName}</span>
+                <span className="block truncate text-xs text-muted">{user.email}</span>
+              </span>
+            </div>
+            <Link href="/tai-khoan" className="flex items-center gap-2.5 border-b border-line py-3.5 text-base font-medium text-ink" onClick={() => setMobileOpen(false)}>
+              <Icon name="book" className="h-5 w-5 text-cyan-ink" /> Khóa học của tôi
             </Link>
-          )}
-        </div>
-      )}
+            <Link href="/tai-khoan/cap-nhat" className="flex items-center gap-2.5 border-b border-line py-3.5 text-base font-medium text-ink" onClick={() => setMobileOpen(false)}>
+              <Icon name="settings" className="h-5 w-5 text-cyan-ink" /> Cài đặt tài khoản
+            </Link>
+            <button onClick={handleSignOut} className="flex w-full items-center gap-2.5 border-b border-line py-3.5 text-left text-base font-medium text-[#b42318]">
+              <Icon name="logout" className="h-5 w-5" /> Đăng xuất
+            </button>
+          </>
+        ) : (
+          <Link href="/dang-nhap" className="block border-b border-line py-3.5 text-base font-medium text-ink" onClick={() => setMobileOpen(false)}>
+            Đăng nhập
+          </Link>
+        )}
+
+        <a href={site.zalo.url} target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-block mt-4">
+          <Icon name="chat" className="h-[18px] w-[18px]" strokeWidth={2} />
+          Chat Zalo tư vấn
+        </a>
+      </nav>
     </header>
   );
 }

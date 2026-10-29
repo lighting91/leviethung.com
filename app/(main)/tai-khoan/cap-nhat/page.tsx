@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import Icon from "@/components/ui/Icon";
 
 type MsgState = { type: "success" | "error"; text: string } | null;
 
@@ -97,58 +98,62 @@ export default function CapNhatPage() {
 
   if (pageLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <p className="text-slate-500 text-sm">Đang tải...</p>
+      <div className="grid min-h-[60vh] place-items-center bg-soft">
+        <p className="flex items-center gap-3 text-[0.95rem] text-muted">
+          <span className="h-5 w-5 animate-spin rounded-full border-2 border-line border-t-cyan-ink" aria-hidden="true" />
+          Đang tải...
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
-      <Link href="/tai-khoan" className="text-orange-600 text-sm hover:underline mb-6 block">
-        ← Về trang tài khoản
+    <div className="bg-soft">
+    <div className="container-x max-w-[720px] pb-24 pt-12 sm:pt-16">
+      <Link href="/tai-khoan" className="mb-8 inline-flex items-center gap-1.5 text-[0.9rem] font-semibold text-ink hover:text-cyan-deep">
+        <Icon name="chevron-left" className="h-4 w-4" strokeWidth={2} /> Về trang tài khoản
       </Link>
 
-      <h1 className="text-2xl font-bold text-slate-900 mb-8">Cập nhật tài khoản</h1>
+      <header className="section-head sm">
+        <p className="kicker">Settings</p>
+        <h1>Cập nhật <span className="accent">tài khoản</span></h1>
+      </header>
 
       {/* Account info */}
-      <div className="bg-slate-50 rounded-xl px-5 py-3 mb-6 text-sm text-slate-600">
-        Email đăng nhập: <span className="font-medium text-slate-900">{userEmail}</span>
+      <div className="card mb-5 flex items-center gap-3 px-5 py-4 text-[0.92rem]">
+        <Icon name="mail" className="h-5 w-5 flex-none text-cyan-ink" />
+        <span>Email đăng nhập: <strong>{userEmail}</strong></span>
       </div>
 
       {/* Profile form */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 mb-6 shadow-sm">
-        <h2 className="font-semibold text-slate-900 mb-5">Thông tin cá nhân</h2>
+      <div className="card mb-5 p-6 sm:p-7">
+        <h2 className="mb-5 text-[1.1rem] font-bold">Thông tin cá nhân</h2>
         <form onSubmit={handleProfileUpdate} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Họ và tên</label>
+          <div className="field">
+            <label htmlFor="acc-name">Họ và tên</label>
             <input
+              id="acc-name"
               type="text"
               value={profile.full_name}
               onChange={(e) => setProfile((p) => ({ ...p, full_name: e.target.value }))}
               placeholder="Nguyễn Văn A"
-              className="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="input"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Số điện thoại</label>
+          <div className="field">
+            <label htmlFor="acc-phone">Số điện thoại</label>
             <input
+              id="acc-phone"
               type="tel"
               value={profile.phone}
               onChange={(e) => setProfile((p) => ({ ...p, phone: e.target.value }))}
               placeholder="0912 345 678"
-              className="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="input"
             />
           </div>
 
           {profileMsg && (
-            <div
-              className={`text-sm px-4 py-3 rounded-lg border ${
-                profileMsg.type === "success"
-                  ? "bg-green-50 text-green-700 border-green-200"
-                  : "bg-red-50 text-red-600 border-red-200"
-              }`}
-            >
+            <div className={profileMsg.type === "success" ? "alert-success" : "alert-error"} role="status">
               {profileMsg.text}
             </div>
           )}
@@ -156,7 +161,7 @@ export default function CapNhatPage() {
           <button
             type="submit"
             disabled={profileLoading}
-            className="bg-orange-600 hover:bg-orange-700 disabled:opacity-60 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors text-sm"
+            className="btn btn-dark btn-sm"
           >
             {profileLoading ? "Đang lưu..." : "Lưu thay đổi"}
           </button>
@@ -164,39 +169,35 @@ export default function CapNhatPage() {
       </div>
 
       {/* Password form */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-        <h2 className="font-semibold text-slate-900 mb-1">Đổi mật khẩu</h2>
-        <p className="text-sm text-slate-500 mb-5">Mật khẩu mới sẽ được áp dụng ngay lập tức</p>
+      <div className="card p-6 sm:p-7">
+        <h2 className="mb-1 text-[1.1rem] font-bold">Đổi mật khẩu</h2>
+        <p className="mb-5 text-[0.92rem] text-muted">Mật khẩu mới sẽ được áp dụng ngay lập tức</p>
         <form onSubmit={handlePasswordChange} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Mật khẩu mới</label>
+          <div className="field">
+            <label htmlFor="acc-new-password">Mật khẩu mới</label>
             <input
+              id="acc-new-password"
               type="password"
               value={passwords.newPw}
               onChange={(e) => setPasswords((p) => ({ ...p, newPw: e.target.value }))}
               placeholder="Tối thiểu 6 ký tự"
-              className="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="input"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Xác nhận mật khẩu mới</label>
+          <div className="field">
+            <label htmlFor="acc-confirm-password">Xác nhận mật khẩu mới</label>
             <input
+              id="acc-confirm-password"
               type="password"
               value={passwords.confirm}
               onChange={(e) => setPasswords((p) => ({ ...p, confirm: e.target.value }))}
               placeholder="Nhập lại mật khẩu mới"
-              className="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="input"
             />
           </div>
 
           {pwMsg && (
-            <div
-              className={`text-sm px-4 py-3 rounded-lg border ${
-                pwMsg.type === "success"
-                  ? "bg-green-50 text-green-700 border-green-200"
-                  : "bg-red-50 text-red-600 border-red-200"
-              }`}
-            >
+            <div className={pwMsg.type === "success" ? "alert-success" : "alert-error"} role="status">
               {pwMsg.text}
             </div>
           )}
@@ -204,12 +205,13 @@ export default function CapNhatPage() {
           <button
             type="submit"
             disabled={pwLoading}
-            className="bg-slate-800 hover:bg-slate-900 disabled:opacity-60 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors text-sm"
+            className="btn btn-outline btn-sm"
           >
             {pwLoading ? "Đang đổi..." : "Đổi mật khẩu"}
           </button>
         </form>
       </div>
+    </div>
     </div>
   );
 }

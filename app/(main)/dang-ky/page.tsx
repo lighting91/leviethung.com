@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import AuthShell from "@/components/ui/AuthShell";
+import Icon from "@/components/ui/Icon";
 
 export default function DangKyPage() {
   const router = useRouter();
@@ -46,71 +48,77 @@ export default function DangKyPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-        <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 p-8 shadow-sm text-center">
-          <div className="text-5xl mb-4">✉️</div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Kiểm tra email của bạn</h2>
-          <p className="text-slate-500 text-sm mb-6">
+      <AuthShell kicker="Almost there" title="Kiểm tra email">
+        <div className="text-center">
+          <span className="icon-tile mx-auto mb-4"><Icon name="mail" className="h-6 w-6" /></span>
+          <p className="mb-6 text-[0.95rem]">
             Chúng tôi đã gửi link xác nhận tới <strong>{email}</strong>. Nhấp vào link để kích hoạt tài khoản.
           </p>
-          <Link href="/dang-nhap" className="text-orange-600 font-medium hover:underline text-sm">
-            Quay lại đăng nhập →
+          <Link href="/dang-nhap" className="btn btn-outline btn-sm">
+            Quay lại đăng nhập <Icon name="arrow-right" className="h-4 w-4" strokeWidth={2} />
           </Link>
         </div>
-      </div>
+      </AuthShell>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-          <div className="text-center mb-8">
-            <Link href="/" className="font-bold text-xl text-slate-900">Lê Viết Hưng</Link>
-            <h1 className="text-2xl font-bold text-slate-900 mt-4 mb-1">Đăng ký tài khoản</h1>
-            <p className="text-slate-500 text-sm">Miễn phí — nhận ngay tài nguyên độc quyền</p>
-          </div>
-
+    <AuthShell
+      kicker="Join free"
+      title="Đăng ký tài khoản"
+      subtitle="Miễn phí — học thử bài đầu tiên và nhận tài nguyên độc quyền."
+      footer={
+        <>
+          Đã có tài khoản?{" "}
+          <Link href="/dang-nhap" className="font-semibold text-cyan-deep hover:underline">
+            Đăng nhập
+          </Link>
+        </>
+      }
+    >
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Họ và tên</label>
+            <div className="field">
+              <label htmlFor="signup-full-name">Họ và tên</label>
               <input
+          id="signup-full-name"
                 type="text"
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="input"
                 placeholder="Nguyễn Văn A"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
+            <div className="field">
+              <label htmlFor="signup-email">Email</label>
               <input
+          id="signup-email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="input"
                 placeholder="ban@email.com"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Mật khẩu</label>
+            <div className="field">
+              <label htmlFor="signup-password">Mật khẩu</label>
               <input
+          id="signup-password"
                 type="password"
                 required
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="input"
                 placeholder="Tối thiểu 6 ký tự"
               />
             </div>
 
             {error && (
-              <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-lg border border-red-200">
+              <div className="alert-error" role="alert">
                 {error}
               </div>
             )}
@@ -118,20 +126,11 @@ export default function DangKyPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-orange-600 hover:bg-orange-700 disabled:opacity-60 text-white font-semibold py-3 rounded-lg transition-colors"
+              className="btn btn-dark btn-block"
             >
               {loading ? "Đang tạo tài khoản..." : "Đăng ký miễn phí"}
             </button>
           </form>
-
-          <p className="text-center text-sm text-slate-500 mt-6">
-            Đã có tài khoản?{" "}
-            <Link href="/dang-nhap" className="text-orange-600 font-medium hover:underline">
-              Đăng nhập
-            </Link>
-          </p>
-        </div>
-      </div>
-    </div>
+    </AuthShell>
   );
 }
