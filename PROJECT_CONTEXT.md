@@ -355,20 +355,28 @@ Thêm YouTube video cho bài học:
 
 ---
 
-## 13. Màu sắc & Design System
+## 13. Màu sắc & Design System (theo guideline SMUFT — smuft.vn)
+
+Token khai báo trong `app/globals.css` (`@theme inline`), dùng dạng `bg-ink`, `text-cyan-ink`, `bg-soft`, `border-line`…
 
 ```css
-/* Primary */
---color-primary: #FF6B35       /* orange-600 */
---color-primary-dark: #E55A2B  /* orange-700 */
---color-primary-light: #FFF1EC /* orange-50 */
-
-/* Dùng trong code */
-bg-orange-600, text-orange-600, border-orange-600
-hover:bg-orange-700
-bg-slate-900 (dark sections)
-bg-slate-50 (light bg sections)
+--color-ink: #0e0f12        /* chữ tiêu đề, nút chính, nền khối tối */
+--color-body: #3d434d       /* chữ thường */
+--color-muted: #666d7a      /* chữ phụ, kicker */
+--color-navy: #1a2d57       /* tiêu đề phụ (card, case study) */
+--color-cyan: #36d1d6       /* điểm nhấn trên nền tối, trang trí */
+--color-cyan-2: #12c7de     /* gradient nút accent, focus */
+--color-cyan-ink: #0b9fb4   /* chữ nhấn CỠ LỚN trên nền trắng (tiêu đề, số liệu) */
+--color-cyan-deep: #077a8a  /* chữ nhỏ & link màu cyan (đạt WCAG AA) */
+--color-soft: #f4f5f7       /* nền section xen kẽ */
+--color-line: #e4e7eb       /* viền */
 ```
+
+- Font: **Be Vietnam Pro** (next/font, 300–800).
+- Class dùng chung: `.container-x`, `.section`, `.section-head` (+ `.sm`, `.on-dark`), `.kicker`, `.btn` + `.btn-dark/.btn-outline/.btn-accent/.btn-light`, `.card`, `.card-hover`, `.chip`, `.input`, `.reveal`.
+- Component dùng chung: `components/ui/*` (SectionHead, PageHero, Icon, CourseCard, PostCard, TestimonialCard, PlaybookCta, ContactSection, AuthShell…).
+- Kênh liên hệ (Zalo, email, Facebook…) sửa tại `lib/site.ts`.
+- Nội dung trang chủ (hero, số liệu, case study, đối tác) sửa trong CMS: **Cài đặt → Trang chủ** (`content/settings/home.md`). Ảnh khai báo mà chưa có file trong `public/` sẽ tự ẩn (hiện chữ thay thế).
 
 ---
 

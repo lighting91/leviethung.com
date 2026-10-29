@@ -1,77 +1,55 @@
 import type { Metadata } from "next";
 import { getAllResources } from "@/lib/content";
+import PageHero from "@/components/ui/PageHero";
+import PlaybookCta from "@/components/ui/PlaybookCta";
+import Icon from "@/components/ui/Icon";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Tài nguyên",
-  description: "Template, playbook và công cụ miễn phí về TikTok Marketing.",
+  description: "Playbook, template và checklist miễn phí về TikTok Shop, KOC và nội dung bán hàng.",
 };
 
 export default function TaiNguyenPage() {
-  const resources = getAllResources();
+  // The playbook already has its own feature block, so it is not listed twice.
+  const resources = getAllResources().filter((r) => r.fileUrl !== site.playbook);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Tài nguyên miễn phí</h1>
-        <p className="text-slate-500">
-          Template, playbook và công cụ giúp bạn làm TikTok Marketing hiệu quả hơn.
-        </p>
-      </div>
+    <>
+      <PageHero
+        kicker="Free resources"
+        title="Tài nguyên"
+        accent="miễn phí"
+        lead="Playbook, template và checklist đúc kết từ các dự án thật — tải về là dùng được."
+      />
 
-      {/* Always show the PDF playbook */}
-      <div className="mb-8">
-        <div className="bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6 text-white">
-          <div className="text-5xl">📘</div>
-          <div className="flex-1 text-center sm:text-left">
-            <span className="inline-block text-xs bg-white/20 text-white px-2 py-0.5 rounded-full font-medium mb-3">
-              PDF · Miễn phí
-            </span>
-            <h2 className="text-xl font-bold mb-2">TikTok Cosmetic One-Shot Playbook</h2>
-            <p className="text-orange-100 text-sm">
-              Cẩm nang toàn diện về TikTok Marketing dành cho ngành mỹ phẩm. Bao gồm chiến lược nội dung, cách tăng tương tác và chuyển đổi doanh số.
-            </p>
-          </div>
-          <a
-            href="/files/TikTok_Cosmetic_One-Shot_Playbook.pdf"
-            download
-            className="flex-shrink-0 bg-white text-orange-700 font-semibold px-6 py-3 rounded-lg hover:bg-orange-50 transition-colors whitespace-nowrap"
-          >
-            Tải về PDF →
-          </a>
-        </div>
-      </div>
+      <section className="section">
+        <div className="container-x">
+          <PlaybookCta />
 
-      {resources.length > 0 && (
-        <div className="grid gap-6 sm:grid-cols-2">
-          {resources.map((res) => (
-            <div key={res.slug} className="bg-white rounded-xl border border-slate-200 p-6">
-              <span className="inline-block text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-medium mb-3">
-                {res.category}
-              </span>
-              <h3 className="font-semibold text-slate-900 mb-2 text-lg">{res.title}</h3>
-              <p className="text-sm text-slate-500 mb-5">{res.description}</p>
-              {res.fileUrl && (
-                <a
-                  href={res.fileUrl}
-                  download
-                  className="inline-flex items-center gap-2 text-sm text-orange-600 font-medium hover:underline"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                  </svg>
-                  Tải về
-                </a>
-              )}
+          {resources.length > 0 ? (
+            <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {resources.map((res) => (
+                <article key={res.slug} className="card reveal flex flex-col p-7">
+                  <div className="mb-4 flex items-center gap-3.5">
+                    <span className="icon-tile"><Icon name="file" className="h-6 w-6" /></span>
+                    <span className="chip">{res.category}</span>
+                  </div>
+                  <h2 className="mb-2 text-[1.18rem] font-bold text-navy">{res.title}</h2>
+                  <p className="mb-6 text-[0.95rem]">{res.description}</p>
+                  {res.fileUrl && (
+                    <a href={res.fileUrl} download className="btn btn-outline btn-sm mt-auto self-start">
+                      <Icon name="download" className="h-4 w-4" strokeWidth={2} /> Tải về
+                    </a>
+                  )}
+                </article>
+              ))}
             </div>
-          ))}
+          ) : (
+            <p className="reveal mt-10 text-center text-[0.95rem] text-muted">Thêm tài nguyên sẽ được cập nhật sớm!</p>
+          )}
         </div>
-      )}
-
-      {resources.length === 0 && (
-        <div className="mt-6">
-          <p className="text-slate-500 text-sm text-center py-6">Thêm tài nguyên sẽ được cập nhật sớm!</p>
-        </div>
-      )}
-    </div>
+      </section>
+    </>
   );
 }

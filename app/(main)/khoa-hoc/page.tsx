@@ -2,93 +2,58 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllCourses } from "@/lib/content";
 import LearningPath from "@/components/sales/LearningPath";
+import PageHero from "@/components/ui/PageHero";
+import CourseCard from "@/components/ui/CourseCard";
+import CurriculumPreview from "@/components/ui/CurriculumPreview";
+import PlaybookCta from "@/components/ui/PlaybookCta";
+import Icon from "@/components/ui/Icon";
 
 export const metadata: Metadata = {
   title: "Khóa học",
-  description: "Chương trình học TikTok Marketing từ cơ bản đến nâng cao.",
+  description: "Khóa học thực chiến về TikTok Shop, quản lý KOC và livestream bán hàng — có lộ trình, học thử miễn phí.",
 };
-
-const levelColors: Record<string, string> = {
-  "Cơ bản": "bg-green-50 text-green-700",
-  "Trung cấp": "bg-yellow-50 text-yellow-700",
-  "Nâng cao": "bg-red-50 text-red-700",
-};
-
-function formatPrice(n: number) {
-  return n.toLocaleString("vi-VN") + "đ";
-}
 
 export default function KhoaHocPage() {
   const courses = getAllCourses();
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Khóa học</h1>
-        <p className="text-slate-500">
-          Chương trình học bài bản về TikTok Marketing, từ cơ bản đến nâng cao.
-        </p>
-      </div>
+    <>
+      <PageHero
+        kicker="Courses"
+        title="Khóa học"
+        accent="thực chiến"
+        lead="Chương trình học bài bản, đúc kết từ các dự án thật — học tuần tự từng bài, áp dụng ngay vào kênh và gian hàng của bạn."
+      />
 
-      {courses.length === 0 ? (
-        <div className="text-center py-20 bg-slate-50 rounded-2xl">
-          <div className="text-5xl mb-4">🚧</div>
-          <h2 className="text-xl font-semibold text-slate-700 mb-2">Đang xây dựng</h2>
-          <p className="text-slate-500 text-sm max-w-sm mx-auto">
-            Các khóa học đang được chuẩn bị. Hãy theo dõi trang này để cập nhật sớm nhất!
-          </p>
-          <Link
-            href="/ve-toi"
-            className="inline-block mt-6 text-sm text-orange-600 font-medium hover:underline"
-          >
-            Liên hệ để biết thêm →
-          </Link>
-        </div>
-      ) : (
-        <>
-          <div className="grid gap-6 sm:grid-cols-2">
-            {courses.map((course) => (
-              <Link
-                key={course.slug}
-                href={`/khoa-hoc/${course.slug}`}
-                className="bg-white rounded-xl border border-slate-200 p-6 hover:border-orange-300 hover:shadow-sm transition-all group"
-              >
-                <div className="flex items-center gap-2 mb-4">
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${levelColors[course.level] ?? "bg-slate-100 text-slate-600"}`}>
-                    {course.level}
-                  </span>
-                  {course.duration && (
-                    <span className="text-xs text-slate-400">• {course.duration}</span>
-                  )}
-                </div>
-                <h2 className="font-semibold text-slate-900 text-lg mb-2 group-hover:text-orange-600 transition-colors">
-                  {course.title}
-                </h2>
-                <p className="text-sm text-slate-500 mb-4">{course.description}</p>
-                <div className="flex items-center justify-between">
-                  {course.price ? (
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-orange-600">{formatPrice(course.price)}</span>
-                      {course.original_price && (
-                        <span className="text-sm text-slate-400 line-through">{formatPrice(course.original_price)}</span>
-                      )}
-                    </div>
-                  ) : (
-                    <span className="text-sm text-slate-400">Liên hệ để đăng ký</span>
-                  )}
-                  <span className="text-sm text-orange-600 font-medium">Xem chi tiết →</span>
-                </div>
-              </Link>
-            ))}
-          </div>
+      <section className="section">
+        <div className="container-x">
+          {courses.length === 0 ? (
+            <div className="card reveal mx-auto max-w-xl p-10 text-center">
+              <span className="icon-tile mx-auto mb-5"><Icon name="grad" className="h-6 w-6" /></span>
+              <h2 className="mb-2 text-xl font-bold">Đang xây dựng</h2>
+              <p className="mx-auto max-w-sm text-[0.95rem]">
+                Các khóa học đang được chuẩn bị. Hãy theo dõi trang này để cập nhật sớm nhất!
+              </p>
+              <Link href="/ve-toi" className="btn btn-outline btn-sm mt-6">Liên hệ để biết thêm</Link>
+            </div>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2">
+              {courses.map((course) => <CourseCard key={course.slug} course={course} />)}
+              {courses.length === 1 && <CurriculumPreview course={courses[0]} />}
+            </div>
+          )}
 
           {courses.length >= 2 && (
-            <div className="mt-16">
+            <div className="mt-24">
               <LearningPath courses={courses} />
             </div>
           )}
-        </>
-      )}
-    </div>
+
+          <div className="mt-20">
+            <PlaybookCta />
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

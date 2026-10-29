@@ -81,6 +81,7 @@ export interface Testimonial {
   rating?: number;
   result?: string;
   screenshot?: string;
+  platform?: string;
   tags: string[];
 }
 
@@ -95,6 +96,57 @@ export interface InstructorInfo {
     facebook?: string;
     youtube?: string;
   };
+}
+
+export interface StatItem {
+  prefix?: string;
+  value: number;
+  suffix?: string;
+  label: string;
+}
+
+export interface CaseStudy {
+  name: string;
+  platform: string;
+  image?: string;
+  handle?: string;
+  handle_url?: string;
+  summary: string;
+  metrics: { value: string; label: string }[];
+  kols: { name: string; handle?: string; avatar?: string }[];
+}
+
+export interface HomeSettings {
+  hero: {
+    eyebrow: string;
+    title: string;
+    title_accent: string;
+    subtitle: string;
+    image?: string;
+    float_cards: { value: string; label: string }[];
+  };
+  stats: {
+    intro: string;
+    highlight?: StatItem;
+    items: StatItem[];
+  };
+  about: {
+    role: string;
+    image?: string;
+    intro: string;
+    checks: string[];
+    quote?: string;
+  };
+  cases: CaseStudy[];
+  partners: { name: string; url?: string; logo?: string }[];
+}
+
+// Image paths from content files are only used when the file exists in /public,
+// so a missing upload falls back to the text/initials layout instead of a broken image.
+function publicAsset(src?: string): string | undefined {
+  if (!src) return undefined;
+  if (/^https?:\/\//.test(src)) return src;
+  return fs.existsSync(path.join(process.cwd(), "public", src)) ? src : undefined;
 }
 
 function readDir(subdir: string): string[] {
@@ -169,6 +221,16 @@ export function getCourseBySlug(slug: string): Course | null {
   return parseCourseFile(filename);
 }
 
+// YAML 1.1 reads an unquoted "10:00" as the base-60 number 600, so turn it back into mm:ss.
+function normalizeDuration(value: unknown): string | undefined {
+  if (typeof value === "number") {
+    const minutes = Math.floor(value / 60);
+    const seconds = value % 60;
+    return `${minutes}:${String(seconds).padStart(2, "0")}`;
+  }
+  return typeof value === "string" && value ? value : undefined;
+}
+
 function parseCourseFile(filename: string): Course {
   const slug = filename.replace(".md", "");
   const raw = fs.readFileSync(path.join(contentDir, "courses", filename), "utf8");
@@ -186,7 +248,10 @@ function parseCourseFile(filename: string): Course {
     hero_headline: data.hero_headline,
     hero_subheadline: data.hero_subheadline,
     pain_points: data.pain_points ?? [],
-    modules: data.modules ?? [],
+    modules: (data.modules ?? []).map((m: Module) => ({
+      ...m,
+      lessons: (m.lessons ?? []).map((l) => ({ ...l, duration: normalizeDuration(l.duration) })),
+    })),
     bonuses: data.bonuses ?? [],
     testimonials_tag: data.testimonials_tag,
     related_courses: data.related_courses ?? [],
@@ -206,12 +271,13 @@ export function getAllTestimonials(): Testimonial[] {
     return {
       slug,
       name: data.name ?? "",
-      avatar: data.avatar,
+      avatar: publicAsset(data.avatar),
       role: data.role,
       body: data.body ?? "",
       rating: data.rating ?? 5,
       result: data.result,
       screenshot: data.screenshot,
+      platform: data.platform,
       tags: data.tags ?? [],
     };
   });
@@ -233,6 +299,57 @@ export function getInstructorInfo(): InstructorInfo | null {
     avatar: data.avatar,
     achievements: data.achievements ?? [],
     social: data.social ?? {},
+  };
+}
+
+const platformIcons: Record<string, string> = {
+  shopee: "/images/smuft/icon-shopee.webp",
+  "tiktok shop": "/images/smuft/icon-tiktokshop.webp",
+  tiktokshop: "/images/smuft/icon-tiktokshop.webp",
+  tiktok: "/images/smuft/icon-tiktok.webp",
+};
+
+export function getPlatformIcon(platform: string): string | undefined {
+  return publicAsset(platformIcons[platform.toLowerCase()]);
+}
+
+export function getHomeSettings(): HomeSettings {
+  const filepath = path.join(contentDir, "settings", "home.md");
+  const data = fs.existsSync(filepath) ? matter(fs.readFileSync(filepath, "utf8")).data : {};
+  const hero = data.hero ?? {};
+  const stats = data.stats ?? {};
+  const about = data.about ?? {};
+  return {
+    hero: {
+      eyebrow: hero.eyebrow ?? "",
+      title: hero.title ?? "",
+      title_accent: hero.title_accent ?? "",
+      subtitle: hero.subtitle ?? "",
+      image: publicAsset(hero.image),
+      float_cards: hero.float_cards ?? [],
+    },
+    stats: {
+      intro: stats.intro ?? "",
+      highlight: stats.highlight,
+      items: stats.items ?? [],
+    },
+    about: {
+      role: about.role ?? "",
+      image: publicAsset(about.image),
+      intro: about.intro ?? "",
+      checks: about.checks ?? [],
+      quote: about.quote,
+    },
+    cases: (data.cases ?? []).map((c: CaseStudy) => ({
+      ...c,
+      image: publicAsset(c.image),
+      metrics: c.metrics ?? [],
+      kols: (c.kols ?? []).map((k) => ({ ...k, avatar: publicAsset(k.avatar) })),
+    })),
+    partners: (data.partners ?? []).map((p: HomeSettings["partners"][number]) => ({
+      ...p,
+      logo: publicAsset(p.logo),
+    })),
   };
 }
 
