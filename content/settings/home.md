@@ -34,7 +34,7 @@ stats:
       label: khách hàng có lợi nhuận ngay trong quý đầu triển khai
 about:
   role: Founder · SMUFT Agency
-  image: /images/smuft/founder-hung.webp
+  image: https://smuft.vn/assets/founder-hung.webp
   intro: Hơn 8 năm kinh nghiệm trong ngành E-commerce, đối tác chiến lược của các thương hiệu lớn.
   checks:
     - Kinh nghiệm 8+ năm trong lĩnh vực thương mại điện tử với đa dạng vai trò từ Seller cho đến Enabler.
@@ -44,7 +44,7 @@ about:
 cases:
   - name: Kwang Cosmetics
     platform: Shopee
-    image: /images/smuft/case-kwang.webp
+    image: https://smuft.vn/assets/case-kwang.webp
     summary: Bứt phá từ 300 triệu lên 2 tỷ doanh thu chỉ trong 1 tháng, với 5 sản phẩm vươn TOP đầu sàn Shopee và CIR tối ưu ở mức 3%.
     metrics:
       - value: 300tr → 2 tỷ
@@ -55,7 +55,7 @@ cases:
         label: CIR (Cost to Income Ratio)*
   - name: NABY Beauty
     platform: Shopee
-    image: /images/smuft/case-naby.webp
+    image: https://smuft.vn/assets/case-naby.webp
     summary: Trong tháng đầu hợp tác, NABY đạt tăng trưởng 632%, xử lý hơn 3.000 đơn hàng với giá trị trung bình trên 300.000 VNĐ và giữ CIR ở mức 2,25%.
     metrics:
       - value: 632%
@@ -68,7 +68,7 @@ cases:
         label: CIR (Cost to Income Ratio)*
   - name: Miota Store
     platform: TikTok Shop
-    image: /images/smuft/case-miota.webp
+    image: https://smuft.vn/assets/case-miota.webp
     summary: 'Trong vòng 01 tháng kể từ khi hợp tác (08/2024 – 09/2024), Miota Store đạt được:'
     metrics:
       - value: 0 → 6 tỷ
@@ -80,19 +80,19 @@ cases:
     kols:
       - name: Quyền Leo Daily
         handle: '@quyenleodaily'
-        avatar: /images/smuft/kol-quyenleodaily.webp
+        avatar: https://smuft.vn/assets/kol-quyenleodaily.webp
       - name: Hứa Ngân Daily
         handle: '@nganhuane'
-        avatar: /images/smuft/kol-nganhuane.webp
+        avatar: https://smuft.vn/assets/kol-nganhuane.webp
       - name: Mần Đẹp
         handle: '@trangtrankoc'
-        avatar: /images/smuft/kol-trangtrankoc.webp
+        avatar: https://smuft.vn/assets/kol-trangtrankoc.webp
       - name: Lyn Dùng Gì?
         handle: '@baclynne'
-        avatar: /images/smuft/kol-baclynne.webp
+        avatar: https://smuft.vn/assets/kol-baclynne.webp
   - name: Kat ơi
     platform: TikTok
-    image: /images/smuft/case-kat.webp
+    image: https://smuft.vn/assets/case-kat.webp
     handle: '@kat.i618'
     handle_url: https://www.tiktok.com/@kat.i618
     summary: Kênh review mỹ phẩm kết hợp livestream bán hàng và gắn sản phẩm qua phần trưng bày TikTok Shop, đồng hành cùng các thương hiệu như Make P:rem.
@@ -106,32 +106,32 @@ cases:
 partners:
   - name: Make P:rem
     url: https://shopee.vn/makeprem.vn
-    logo: /images/smuft/partner-makeprem.webp
+    logo: https://smuft.vn/assets/partner-makeprem.webp
   - name: NABY — Nhất Hạ Beauty
     url: https://shopee.vn/nhathabeauty
-    logo: /images/smuft/partner-naby.webp
+    logo: https://smuft.vn/assets/partner-naby.webp
   - name: Miota
     url: https://shopee.vn/miota.official
-    logo: /images/smuft/partner-miota.webp
+    logo: https://smuft.vn/assets/partner-miota.webp
   - name: Moosun
     url: https://shopee.vn/moosun.vn
-    logo: /images/smuft/partner-moosun.webp
+    logo: https://smuft.vn/assets/partner-moosun.webp
   - name: Kwang Cosmetic
     url: https://shopee.vn/kwang.gaju
-    logo: /images/smuft/partner-kwang.webp
+    logo: https://smuft.vn/assets/partner-kwang.webp
   - name: Minoderm
     url: https://shopee.vn/minoderm
-    logo: /images/smuft/partner-minoderm.webp
+    logo: https://smuft.vn/assets/partner-minoderm.webp
   - name: Lucenbase
     url: https://shopee.vn/lucenbase.official.store
-    logo: /images/smuft/partner-lucenbase.webp
+    logo: https://smuft.vn/assets/partner-lucenbase.webp
   - name: PT Beauty
     url: https://shopee.vn/ptbeauty.officialstore
-    logo: /images/smuft/partner-ptbeauty.webp
+    logo: https://smuft.vn/assets/partner-ptbeauty.webp
   - name: Lamuse
     url: https://shopee.vn/lamuse.store
-    logo: /images/smuft/partner-lamuse.webp
+    logo: https://smuft.vn/assets/partner-lamuse.webp
   - name: GL Beauty
     url: https://shopee.vn/glbeauty.official
-    logo: /images/smuft/partner-glbeauty.webp
+    logo: https://smuft.vn/assets/partner-glbeauty.webp
 ---

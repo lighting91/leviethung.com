@@ -302,11 +302,12 @@ export function getInstructorInfo(): InstructorInfo | null {
   };
 }
 
+// Platform marks are served from smuft.vn (same assets as the agency site).
 const platformIcons: Record<string, string> = {
-  shopee: "/images/smuft/icon-shopee.webp",
-  "tiktok shop": "/images/smuft/icon-tiktokshop.webp",
-  tiktokshop: "/images/smuft/icon-tiktokshop.webp",
-  tiktok: "/images/smuft/icon-tiktok.webp",
+  shopee: "https://smuft.vn/assets/icon-shopee.webp",
+  "tiktok shop": "https://smuft.vn/assets/icon-tiktokshop.webp",
+  tiktokshop: "https://smuft.vn/assets/icon-tiktokshop.webp",
+  tiktok: "https://smuft.vn/assets/icon-tiktok.webp",
 };
 
 export function getPlatformIcon(platform: string): string | undefined {

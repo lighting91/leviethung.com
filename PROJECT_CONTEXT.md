@@ -377,6 +377,7 @@ Token khai báo trong `app/globals.css` (`@theme inline`), dùng dạng `bg-ink`
 - Component dùng chung: `components/ui/*` (SectionHead, PageHero, Icon, CourseCard, PostCard, TestimonialCard, PlaybookCta, ContactSection, AuthShell…).
 - Kênh liên hệ (Zalo, email, Facebook…) sửa tại `lib/site.ts`.
 - Nội dung trang chủ (hero, số liệu, case study, đối tác) sửa trong CMS: **Cài đặt → Trang chủ** (`content/settings/home.md`). Ảnh khai báo mà chưa có file trong `public/` sẽ tự ẩn (hiện chữ thay thế).
+- Ảnh case study, logo đối tác, avatar feedback, ảnh founder và icon sàn dùng chung bộ ảnh của smuft.vn (`https://smuft.vn/assets/...`). Đổi tên/xóa ảnh bên smuft.vn thì cập nhật đường dẫn tương ứng ở đây.
 
 ---
 
