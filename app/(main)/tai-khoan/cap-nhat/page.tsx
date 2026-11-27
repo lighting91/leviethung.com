@@ -15,9 +15,6 @@ export default function CapNhatPage() {
   const [profileLoading, setProfileLoading] = useState(false);
   const [profileMsg, setProfileMsg] = useState<MsgState>(null);
 
-  const [passwords, setPasswords] = useState({ newPw: "", confirm: "" });
-  const [pwLoading, setPwLoading] = useState(false);
-  const [pwMsg, setPwMsg] = useState<MsgState>(null);
 
   const [userEmail, setUserEmail] = useState("");
   const [pageLoading, setPageLoading] = useState(true);
@@ -56,11 +53,11 @@ export default function CapNhatPage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { error } = await supabase.from("profiles").upsert({
-      id: user.id,
-      full_name: profile.full_name,
-      phone: profile.phone,
-    });
+    // The profile row is created by the auth trigger; students may only change these two columns.
+    const { error } = await supabase
+      .from("profiles")
+      .update({ full_name: profile.full_name, phone: profile.phone })
+      .eq("id", user.id);
 
     setProfileMsg(
       error
@@ -68,32 +65,6 @@ export default function CapNhatPage() {
         : { type: "success", text: "Đã cập nhật thông tin thành công!" }
     );
     setProfileLoading(false);
-  }
-
-  async function handlePasswordChange(e: React.FormEvent) {
-    e.preventDefault();
-    setPwMsg(null);
-
-    if (passwords.newPw.length < 6) {
-      setPwMsg({ type: "error", text: "Mật khẩu tối thiểu 6 ký tự" });
-      return;
-    }
-    if (passwords.newPw !== passwords.confirm) {
-      setPwMsg({ type: "error", text: "Mật khẩu xác nhận không khớp" });
-      return;
-    }
-
-    setPwLoading(true);
-    const supabase = createClient();
-    const { error } = await supabase.auth.updateUser({ password: passwords.newPw });
-
-    if (error) {
-      setPwMsg({ type: "error", text: error.message });
-    } else {
-      setPwMsg({ type: "success", text: "Đã đổi mật khẩu thành công!" });
-      setPasswords({ newPw: "", confirm: "" });
-    }
-    setPwLoading(false);
   }
 
   if (pageLoading) {
@@ -122,7 +93,7 @@ export default function CapNhatPage() {
       {/* Account info */}
       <div className="card mb-5 flex items-center gap-3 px-5 py-4 text-[0.92rem]">
         <Icon name="mail" className="h-5 w-5 flex-none text-cyan-ink" />
-        <span>Email đăng nhập: <strong>{userEmail}</strong></span>
+        <span>Đăng nhập bằng Google: <strong>{userEmail}</strong></span>
       </div>
 
       {/* Profile form */}
@@ -168,49 +139,6 @@ export default function CapNhatPage() {
         </form>
       </div>
 
-      {/* Password form */}
-      <div className="card p-6 sm:p-7">
-        <h2 className="mb-1 text-[1.1rem] font-bold">Đổi mật khẩu</h2>
-        <p className="mb-5 text-[0.92rem] text-muted">Mật khẩu mới sẽ được áp dụng ngay lập tức</p>
-        <form onSubmit={handlePasswordChange} className="space-y-4">
-          <div className="field">
-            <label htmlFor="acc-new-password">Mật khẩu mới</label>
-            <input
-              id="acc-new-password"
-              type="password"
-              value={passwords.newPw}
-              onChange={(e) => setPasswords((p) => ({ ...p, newPw: e.target.value }))}
-              placeholder="Tối thiểu 6 ký tự"
-              className="input"
-            />
-          </div>
-          <div className="field">
-            <label htmlFor="acc-confirm-password">Xác nhận mật khẩu mới</label>
-            <input
-              id="acc-confirm-password"
-              type="password"
-              value={passwords.confirm}
-              onChange={(e) => setPasswords((p) => ({ ...p, confirm: e.target.value }))}
-              placeholder="Nhập lại mật khẩu mới"
-              className="input"
-            />
-          </div>
-
-          {pwMsg && (
-            <div className={pwMsg.type === "success" ? "alert-success" : "alert-error"} role="status">
-              {pwMsg.text}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={pwLoading}
-            className="btn btn-outline btn-sm"
-          >
-            {pwLoading ? "Đang đổi..." : "Đổi mật khẩu"}
-          </button>
-        </form>
-      </div>
     </div>
     </div>
   );

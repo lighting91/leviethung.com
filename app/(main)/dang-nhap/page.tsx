@@ -1,103 +1,35 @@
-"use client";
-
-import Link from "next/link";
-import { Suspense } from "react";
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import type { Metadata } from "next";
 import AuthShell from "@/components/ui/AuthShell";
+import GoogleSignInButton from "@/components/ui/GoogleSignInButton";
+import Icon from "@/components/ui/Icon";
+import { safeNext } from "@/lib/auth";
 
-function LoginForm() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") ?? "/tai-khoan";
+export const metadata: Metadata = { title: "Đăng nhập" };
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      setError("Email hoặc mật khẩu không đúng.");
-      setLoading(false);
-      return;
-    }
-
-    router.push(redirect);
-    router.refresh();
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="field">
-        <label htmlFor="login-email">Email</label>
-        <input
-          id="login-email"
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="input"
-          placeholder="ban@email.com"
-        />
-      </div>
-
-      <div className="field">
-        <label htmlFor="login-password">Mật khẩu</label>
-        <input
-          id="login-password"
-          type="password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="input"
-          placeholder="••••••••"
-        />
-      </div>
-
-      {error && (
-        <div className="alert-error" role="alert">
-          {error}
-        </div>
-      )}
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="btn btn-dark btn-block"
-      >
-        {loading ? "Đang đăng nhập..." : "Đăng nhập"}
-      </button>
-    </form>
-  );
+interface Props {
+  searchParams: Promise<{ redirect?: string; error?: string }>;
 }
 
-export default function DangNhapPage() {
+export default async function DangNhapPage({ searchParams }: Props) {
+  const { redirect, error } = await searchParams;
+
   return (
     <AuthShell
-      kicker="Welcome back"
+      kicker="Welcome"
       title="Đăng nhập"
-      subtitle="Đăng nhập để xem khóa học của bạn."
-      footer={
-        <>
-          Chưa có tài khoản?{" "}
-          <Link href="/dang-ky" className="font-semibold text-cyan-deep hover:underline">
-            Đăng ký miễn phí
-          </Link>
-        </>
-      }
+      subtitle="Dùng tài khoản Google để vào học. Lần đầu đăng nhập sẽ tự tạo tài khoản, không cần mật khẩu."
+      footer={<>Bằng việc tiếp tục, bạn đồng ý để chúng tôi dùng tên và email Google của bạn cho tài khoản học viên.</>}
     >
-      <Suspense fallback={<div className="h-40 animate-pulse rounded-card-sm bg-soft" />}>
-        <LoginForm />
-      </Suspense>
+      {error && (
+        <div className="alert-error mb-4" role="alert">
+          Đăng nhập chưa thành công. Vui lòng thử lại.
+        </div>
+      )}
+      <GoogleSignInButton next={safeNext(redirect)} />
+      <ul className="mt-6 grid gap-2 text-[0.88rem] text-muted">
+        <li className="flex items-start gap-2"><Icon name="shield" className="mt-1 h-4 w-4 flex-none text-cyan-deep" />Không lưu mật khẩu trên website</li>
+        <li className="flex items-start gap-2"><Icon name="check" className="mt-1 h-4 w-4 flex-none text-cyan-deep" strokeWidth={2.4} />Học viên cũ: đăng nhập bằng đúng Gmail đã đăng ký để giữ khóa học</li>
+      </ul>
     </AuthShell>
   );
 }
