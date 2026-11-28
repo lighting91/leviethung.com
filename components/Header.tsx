@@ -23,6 +23,7 @@ export default function Header() {
   const [user, setUser] = useState<User | null>(null);
   const [userName, setUserName] = useState<string>("");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,14 +31,15 @@ export default function Header() {
 
     async function loadUser(u: User | null) {
       setUser(u);
-      if (!u) { setUserName(""); return; }
+      if (!u) { setUserName(""); setIsAdmin(false); return; }
       const { data } = await supabase
         .from("profiles")
-        .select("full_name")
+        .select("full_name, is_admin")
         .eq("id", u.id)
         .single();
-      const name = data?.full_name || u.email?.split("@")[0] || "Tài khoản";
+      const name = data?.full_name || u.user_metadata?.full_name || u.email?.split("@")[0] || "Tài khoản";
       setUserName(name);
+      setIsAdmin(!!data?.is_admin);
     }
 
     supabase.auth.getUser().then(({ data }) => loadUser(data.user));
@@ -89,6 +91,14 @@ export default function Header() {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
   const avatarLetter = userName ? userName[0].toUpperCase() : "?";
+  const avatarUrl: string | undefined = user?.user_metadata?.avatar_url;
+  const avatar = (size: string) =>
+    avatarUrl ? (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={avatarUrl} alt="" referrerPolicy="no-referrer" className={`${size} flex-none rounded-full object-cover`} />
+    ) : (
+      <span className={`grid ${size} flex-none place-items-center rounded-full bg-ink text-xs font-bold text-cyan`}>{avatarLetter}</span>
+    );
 
   return (
     <header
@@ -129,9 +139,7 @@ export default function Header() {
                 aria-haspopup="menu"
                 className="flex max-w-[200px] items-center gap-2 text-[0.95rem] font-medium text-body transition-colors hover:text-ink"
               >
-                <span className="grid h-8 w-8 flex-none place-items-center rounded-full bg-ink text-xs font-bold text-cyan">
-                  {avatarLetter}
-                </span>
+                {avatar("h-8 w-8")}
                 <span className="truncate">{userName}</span>
                 <Icon name="chevron-down" className="h-4 w-4 flex-none text-muted" strokeWidth={2} />
               </button>
@@ -160,6 +168,17 @@ export default function Header() {
                     <Icon name="settings" className="h-4 w-4 text-cyan-ink" />
                     Cài đặt tài khoản
                   </Link>
+                  {isAdmin && (
+                    <Link
+                      href="/quan-tri"
+                      role="menuitem"
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-soft"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      <Icon name="shield" className="h-4 w-4 text-cyan-ink" />
+                      Quản trị
+                    </Link>
+                  )}
                   <hr className="my-1 border-line" />
                   <button
                     onClick={handleSignOut}
@@ -222,9 +241,7 @@ export default function Header() {
         {user ? (
           <>
             <div className="flex items-center gap-2.5 border-b border-line py-3.5">
-              <span className="grid h-9 w-9 flex-none place-items-center rounded-full bg-ink text-xs font-bold text-cyan">
-                {avatarLetter}
-              </span>
+              {avatar("h-9 w-9")}
               <span className="min-w-0">
                 <span className="block truncate text-sm font-semibold text-ink">{userName}</span>
                 <span className="block truncate text-xs text-muted">{user.email}</span>
@@ -236,6 +253,11 @@ export default function Header() {
             <Link href="/tai-khoan/cap-nhat" className="flex items-center gap-2.5 border-b border-line py-3.5 text-base font-medium text-ink" onClick={() => setMobileOpen(false)}>
               <Icon name="settings" className="h-5 w-5 text-cyan-ink" /> Cài đặt tài khoản
             </Link>
+            {isAdmin && (
+              <Link href="/quan-tri" className="flex items-center gap-2.5 border-b border-line py-3.5 text-base font-semibold text-ink" onClick={() => setMobileOpen(false)}>
+                <Icon name="shield" className="h-5 w-5 text-cyan-ink" /> Quản trị
+              </Link>
+            )}
             <button onClick={handleSignOut} className="flex w-full items-center gap-2.5 border-b border-line py-3.5 text-left text-base font-medium text-[#b42318]">
               <Icon name="logout" className="h-5 w-5" /> Đăng xuất
             </button>

@@ -391,3 +391,16 @@ Token khai báo trong `app/globals.css` (`@theme inline`), dùng dạng `bg-ink`
 | `[slug]` wildcard PowerShell | `[]` bị treat là regex | Dùng `-LiteralPath` flag |
 | Supabase prerender error | `createClient()` ở component level chạy trong SSR | Chuyển vào `useEffect` |
 | git push rejected | Remote có changes mới | `git pull --rebase` trước khi push |
+
+---
+
+## 15. Đăng nhập Google & trang quản trị (11/2026)
+
+- **Chỉ đăng nhập bằng Google** (Supabase OAuth). `/dang-ky` tự chuyển về `/dang-nhap`. Không còn mật khẩu, không còn trang đổi mật khẩu.
+- Cấu hình cần có: Google Cloud OAuth Client (redirect URI `https://xkhygsgwvsauaqwiuysk.supabase.co/auth/v1/callback`) → Supabase Authentication → Providers → Google (Client ID + Secret). Email provider: tắt đăng ký mới.
+- Học viên cũ đăng nhập Google bằng đúng Gmail đã đăng ký → Supabase tự gộp vào tài khoản cũ.
+- Profile tạo tự động bởi trigger `handle_new_user` (lấy tên Google). Học viên chỉ được sửa `full_name`, `phone`.
+- **Trang quản trị: `/quan-tri`** (chỉ tài khoản `profiles.is_admin = true`, người khác thấy 404). Có: thống kê, danh sách học viên + tìm kiếm, cấp/thu hồi khóa học, danh sách đơn hàng + nút "Xác nhận đã thanh toán".
+- Thêm admin: Supabase SQL Editor → `update profiles set is_admin = true where id = (select id from auth.users where email = 'email@gmail.com');`
+- DB: hàm `public.is_admin()`, `public.admin_list_users()`; policy "Admins …" trên profiles/enrollments/orders/lesson_progress; unique `enrollments(user_id, course_slug)`.
+- ⚠️ Webhook SePay đang chạy bằng anon key nên **không tự mở khóa** (RLS chặn đọc orders / thêm enrollments) → hiện xác nhận đơn tay ở `/quan-tri`. Sửa triệt để: thêm `SUPABASE_SERVICE_ROLE_KEY` cho webhook.

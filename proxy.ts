@@ -29,8 +29,12 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protect /tai-khoan routes
-  if (!user && request.nextUrl.pathname.startsWith("/tai-khoan")) {
+  // Protect member and admin routes
+  if (
+    !user &&
+    (request.nextUrl.pathname.startsWith("/tai-khoan") ||
+      request.nextUrl.pathname.startsWith("/quan-tri"))
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = "/dang-nhap";
     url.searchParams.set("redirect", request.nextUrl.pathname);
@@ -52,5 +56,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/tai-khoan/:path*", "/dang-nhap", "/dang-ky"],
+  matcher: ["/tai-khoan/:path*", "/quan-tri/:path*", "/dang-nhap", "/dang-ky"],
 };
